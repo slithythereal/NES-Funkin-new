@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="Magma.png">
+	<!-- Created with Adobe Animate version 19.2.0.405 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="Magma0000" x="0" y="0" width="1920" height="664"/>
+	<SubTexture name="Magma0001" x="0" y="0" width="1920" height="664"/>
+	<SubTexture name="Magma0002" x="0" y="0" width="1920" height="664"/>
+	<SubTexture name="Magma0003" x="1920" y="0" width="1920" height="664"/>
+	<SubTexture name="Magma0004" x="1920" y="0" width="1920" height="664"/>
+	<SubTexture name="Magma0005" x="1920" y="0" width="1920" height="664"/>
+	<SubTexture name="Magma0006" x="0" y="664" width="1920" height="664"/>
+	<SubTexture name="Magma0007" x="0" y="664" width="1920" height="664"/>
+	<SubTexture name="Magma0008" x="0" y="664" width="1920" height="664"/>
+	<SubTexture name="Magma0009" x="1920" y="664" width="1920" height="664"/>
+	<SubTexture name="Magma0010" x="1920" y="664" width="1920" height="664"/>
+	<SubTexture name="Magma0011" x="1920" y="664" width="1920" height="664"/>
+	<SubTexture name="Magma0012" x="0" y="1328" width="1920" height="664"/>
+	<SubTexture name="Magma0013" x="0" y="1328" width="1920" height="664"/>
+	<SubTexture name="Magma0014" x="0" y="1328" width="1920" height="664"/>
+	<SubTexture name="Magma0015" x="1920" y="1328" width="1920" height="664"/>
+	<SubTexture name="Magma0016" x="1920" y="1328" width="1920" height="664"/>
+	<SubTexture name="Magma0017" x="1920" y="1328" width="1920" height="664"/>
+	<SubTexture name="Magma0018" x="0" y="1992" width="1920" height="664"/>
+	<SubTexture name="Magma0019" x="0" y="1992" width="1920" height="664"/>
+	<SubTexture name="Magma0020" x="0" y="1992" width="1920" height="664"/>
+	<SubTexture name="Magma0021" x="0" y="1992" width="1920" height="664"/>
+	<SubTexture name="Magma0022" x="0" y="1992" width="1920" height="664"/>
+	<SubTexture name="Magma0023" x="0" y="1992" width="1920" height="664"/>
+</TextureAtlas>

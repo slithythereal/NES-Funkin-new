@@ -1,0 +1,56 @@
+{
+	"animations": [
+		{
+			"offsets": [
+				0,
+				-10
+			],
+			"loop": false,
+			"fps": 24,
+			"anim": "firstDeath",
+			"indices": [],
+			"name": "Bf dies"
+		},
+		{
+			"offsets": [
+				0,
+				-5
+			],
+			"loop": true,
+			"fps": 24,
+			"anim": "deathLoop",
+			"indices": [],
+			"name": "Death loop"
+		},
+		{
+			"offsets": [
+				-16,
+				13
+			],
+			"loop": false,
+			"fps": 24,
+			"anim": "deathConfirm",
+			"indices": [],
+			"name": "Death confirm"
+		}
+	],
+	"no_antialiasing": true,
+	"image": "characters/NES/GodzillaGameover",
+	"position": [
+		380,
+		-340
+	],
+	"healthicon": "bf-pixel",
+	"flip_x": true,
+	"healthbar_colors": [
+		123,
+		214,
+		246
+	],
+	"camera_position": [
+		-1630,
+		100
+	],
+	"sing_duration": 4,
+	"scale": 4.5
+}

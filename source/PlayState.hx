@@ -254,6 +254,10 @@ class PlayState extends MusicBeatState
 	var tankmanRun:FlxTypedGroup<TankmenBG>;
 	var foregroundSprites:FlxTypedGroup<BGSprite>;
 
+	var fire:BGSprite;
+	var mountains:BGSprite;
+	var magma:BGSprite;
+
 	public var songScore:Int = 0;
 	public var songHits:Int = 0;
 	public var songMisses:Int = 0;
@@ -812,16 +816,35 @@ class PlayState extends MusicBeatState
 				if(!ClientPrefs.lowQuality) foregroundSprites.add(new BGSprite('tank4', 1300, 900, 1.5, 1.5, ['fg']));
 				foregroundSprites.add(new BGSprite('tank5', 1620, 700, 1.5, 1.5, ['fg']));
 				if(!ClientPrefs.lowQuality) foregroundSprites.add(new BGSprite('tank3', 1300, 1200, 3.5, 2.5, ['fg']));
+			
+			case 'GodzillaRed':	
+				GameOverSubstate.deathSoundName = 'Red Kills Bf';
+				GameOverSubstate.loopSoundName = 'Red GameOver';
+				GameOverSubstate.endSoundName = 'Laugh_with_me_fellas';
+				GameOverSubstate.characterName = 'red-bf-pixel-dead';
+
+				var bg:BGSprite = new BGSprite('GodzillaRed/Sky', -100, -100, 1, 1);
+				bg.setGraphicSize(Std.int(bg.width * 0.9));
+				bg.updateHitbox();
+				add(bg);
+
+				fire = new BGSprite("GodzillaRed/FireBg", -200, -100, 1, 1, ["FireBg"], true);
+				fire.setGraphicSize(Std.int(fire.width * 1.1));
+				add(fire);
+								
+				mountains = new BGSprite('GodzillaRed/Mountains', -200, -300, 1, 1);
+				mountains.setGraphicSize(Std.int(mountains.width * 0.9));
+				add(mountains);
+
+				magma = new BGSprite("GodzillaRed/Magma", -200, 450, 1, 1, ["Magma"], true);
+				magma.setGraphicSize(Std.int(magma.width * 0.9));
+				add(magma);
 		}
 
 		switch(Paths.formatToSongPath(SONG.song))
 		{
 			case 'stress':
 				GameOverSubstate.characterName = 'bf-holding-gf-dead';
-		}
-
-		if(isPixelStage) {
-			introSoundsSuffix = '-pixel';
 		}
 
 		add(gfGroup); //Needed for blammed lights
@@ -2036,18 +2059,13 @@ class PlayState extends MusicBeatState
 	{
 		var introAssets:Map<String, Array<String>> = new Map<String, Array<String>>();
 		introAssets.set('default', ['ready', 'set', 'go']);
-		introAssets.set('pixel', ['pixelUI/ready-pixel', 'pixelUI/set-pixel', 'pixelUI/date-pixel']);
+		//introAssets.set('pixel', ['pixelUI/ready-pixel', 'pixelUI/set-pixel', 'pixelUI/date-pixel']);
 
 		var introAlts:Array<String> = introAssets.get('default');
-		if (isPixelStage) introAlts = introAssets.get('pixel');
+		//if (isPixelStage) introAlts = introAssets.get('pixel');
 		
 		for (asset in introAlts)
 			Paths.image(asset);
-		
-		Paths.sound('intro3' + introSoundsSuffix);
-		Paths.sound('intro2' + introSoundsSuffix);
-		Paths.sound('intro1' + introSoundsSuffix);
-		Paths.sound('introGo' + introSoundsSuffix);
 	}
 
 	public function startCountdown():Void
@@ -2117,10 +2135,10 @@ class PlayState extends MusicBeatState
 
 				var introAlts:Array<String> = introAssets.get('default');
 				var antialias:Bool = ClientPrefs.globalAntialiasing;
-				if(isPixelStage) {
+				/*if(isPixelStage) {
 					introAlts = introAssets.get('pixel');
 					antialias = false;
-				}
+				}*/
 
 				// head bopping for bg characters on Mall
 				if(curStage == 'mall') {
@@ -2134,15 +2152,15 @@ class PlayState extends MusicBeatState
 				switch (swagCounter)
 				{
 					case 0:
-						FlxG.sound.play(Paths.sound('intro3' + introSoundsSuffix), 0.6);
+						FlxG.sound.play(Paths.sound('intro3'), 0.6);
 					case 1:
 						countdownReady = new FlxSprite().loadGraphic(Paths.image(introAlts[0]));
 						countdownReady.cameras = [camHUD];
 						countdownReady.scrollFactor.set();
 						countdownReady.updateHitbox();
 
-						if (PlayState.isPixelStage)
-							countdownReady.setGraphicSize(Std.int(countdownReady.width * daPixelZoom));
+						/*if (PlayState.isPixelStage)
+							countdownReady.setGraphicSize(Std.int(countdownReady.width * daPixelZoom));*/
 
 						countdownReady.screenCenter();
 						countdownReady.antialiasing = antialias;
@@ -2155,14 +2173,14 @@ class PlayState extends MusicBeatState
 								countdownReady.destroy();
 							}
 						});
-						FlxG.sound.play(Paths.sound('intro2' + introSoundsSuffix), 0.6);
+						FlxG.sound.play(Paths.sound('intro2'), 0.6);
 					case 2:
 						countdownSet = new FlxSprite().loadGraphic(Paths.image(introAlts[1]));
 						countdownSet.cameras = [camHUD];
 						countdownSet.scrollFactor.set();
 
-						if (PlayState.isPixelStage)
-							countdownSet.setGraphicSize(Std.int(countdownSet.width * daPixelZoom));
+						/*if (PlayState.isPixelStage)
+							countdownSet.setGraphicSize(Std.int(countdownSet.width * daPixelZoom));*/
 
 						countdownSet.screenCenter();
 						countdownSet.antialiasing = antialias;
@@ -2175,14 +2193,14 @@ class PlayState extends MusicBeatState
 								countdownSet.destroy();
 							}
 						});
-						FlxG.sound.play(Paths.sound('intro1' + introSoundsSuffix), 0.6);
+						FlxG.sound.play(Paths.sound('intro1'), 0.6);
 					case 3:
 						countdownGo = new FlxSprite().loadGraphic(Paths.image(introAlts[2]));
 						countdownGo.cameras = [camHUD];
 						countdownGo.scrollFactor.set();
 
-						if (PlayState.isPixelStage)
-							countdownGo.setGraphicSize(Std.int(countdownGo.width * daPixelZoom));
+						/*if (PlayState.isPixelStage)
+							countdownGo.setGraphicSize(Std.int(countdownGo.width * daPixelZoom));*/
 
 						countdownGo.updateHitbox();
 
@@ -2197,7 +2215,7 @@ class PlayState extends MusicBeatState
 								countdownGo.destroy();
 							}
 						});
-						FlxG.sound.play(Paths.sound('introGo' + introSoundsSuffix), 0.6);
+						FlxG.sound.play(Paths.sound('introGo'), 0.6);
 					case 4:
 				}
 

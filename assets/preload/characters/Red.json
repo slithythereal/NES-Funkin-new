@@ -1,0 +1,100 @@
+{
+	"animations": [
+		{
+			"offsets": [
+				13,
+				0
+			],
+			"loop": false,
+			"fps": 24,
+			"anim": "idle",
+			"indices": [],
+			"name": "Idle"
+		},
+		{
+			"offsets": [
+				0,
+				0
+			],
+			"loop": false,
+			"fps": 24,
+			"anim": "singLEFT",
+			"indices": [],
+			"name": "Left"
+		},
+		{
+			"offsets": [
+				0,
+				0
+			],
+			"loop": false,
+			"fps": 24,
+			"anim": "singUP",
+			"indices": [],
+			"name": "Up"
+		},
+		{
+			"offsets": [
+				0,
+				0
+			],
+			"loop": false,
+			"fps": 24,
+			"anim": "singRIGHT",
+			"indices": [],
+			"name": "Right"
+		},
+		{
+			"offsets": [
+				-1,
+				0
+			],
+			"loop": false,
+			"fps": 24,
+			"anim": "singDOWN",
+			"indices": [],
+			"name": "Down"
+		},
+		{
+			"offsets": [
+				14,
+				0
+			],
+			"loop": false,
+			"fps": 24,
+			"anim": "Scream",
+			"indices": [],
+			"name": "Scream"
+		},
+		{
+			"offsets": [
+				14,
+				0
+			],
+			"loop": false,
+			"fps": 24,
+			"anim": "Camera Stare",
+			"indices": [],
+			"name": "CamLook"
+		}
+	],
+	"no_antialiasing": true,
+	"image": "characters/NES/GodzillaRed",
+	"position": [
+		100,
+		-180
+	],
+	"healthicon": "red",
+	"flip_x": false,
+	"healthbar_colors": [
+		39,
+		7,
+		7
+	],
+	"camera_position": [
+		-780,
+		-590
+	],
+	"sing_duration": 6.1,
+	"scale": 5.7
+}
