@@ -23,7 +23,7 @@ import flixel.input.keyboard.FlxKey;
 
 using StringTools;
 
-class MainMenuState extends MusicBeatState
+class SMenuState extends MusicBeatState //it's called SMenuState bc i had trouble naming it SettingsMenuState -slithy
 {
 	public static var psychEngineVersion:String = '0.6.2'; //This is also used for Discord RPC
 	public static var curSelected:Int = 0;
@@ -31,9 +31,9 @@ class MainMenuState extends MusicBeatState
 	var menuItems:FlxTypedGroup<FlxSprite>;
 	private var camGame:FlxCamera;
 	var square:FlxSprite;
-	var optionShit:Array<String> = [ //play and settings (both copies of mainmenustate or option state or smth)
-		'play',
-		'settings'
+	var optionShit:Array<String> = [
+		'credits',
+		'options'
 	];
 
 	var camFollow:FlxObject;
@@ -84,7 +84,7 @@ class MainMenuState extends MusicBeatState
 			var menuItem:FlxSprite = new FlxSprite(0, (i * 140)  + offset);
 			menuItem.scale.x = scale;
 			menuItem.scale.y = scale;
-			menuItem.loadGraphic(Paths.image('UI stuffs/menuItems/menu_' + optionShit[i]));
+			menuItem.loadGraphic(Paths.image('UI stuffs/settings/menu_' + optionShit[i]));
 			menuItem.ID = i;
 			menuItem.x += 520;
 			menuItem.y += 150;
@@ -144,7 +144,7 @@ class MainMenuState extends MusicBeatState
 			{
 				selectedSomethin = true;
 				FlxG.sound.play(Paths.sound('cancelMenu'));
-				MusicBeatState.switchState(new TitleState());
+				MusicBeatState.switchState(new MainMenuState());
 			}
 
 			if (controls.ACCEPT)
@@ -173,11 +173,10 @@ class MainMenuState extends MusicBeatState
 
 							switch (daChoice)
 							{
-								case 'play':
-									MusicBeatState.switchState(new PlayMenuState());
-								case 'settings':
-									MusicBeatState.switchState(new SMenuState());
-									//LoadingState.loadAndSwitchState(new options.OptionsState());
+								case 'credits':
+									MusicBeatState.switchState(new CreditsState());
+								case 'options':
+									LoadingState.loadAndSwitchState(new options.OptionsState());
 							}
 						});
 					}

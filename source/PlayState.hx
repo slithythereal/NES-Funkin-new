@@ -54,7 +54,6 @@ import flixel.effects.particles.FlxEmitter;
 import flixel.effects.particles.FlxParticle;
 import flixel.util.FlxSave;
 import animateatlas.AtlasFrameMaker;
-import Achievements;
 import StageData;
 import FunkinLua;
 import DialogueBoxPsych;
@@ -253,7 +252,8 @@ class PlayState extends MusicBeatState
 	var tankGround:BGSprite;
 	var tankmanRun:FlxTypedGroup<TankmenBG>;
 	var foregroundSprites:FlxTypedGroup<BGSprite>;
-
+	
+	var godzillabg:BGSprite;
 	var fire:BGSprite;
 	var mountains:BGSprite;
 	var magma:BGSprite;
@@ -823,21 +823,26 @@ class PlayState extends MusicBeatState
 				GameOverSubstate.endSoundName = 'Laugh_with_me_fellas';
 				GameOverSubstate.characterName = 'red-bf-pixel-dead';
 
-				var bg:BGSprite = new BGSprite('GodzillaRed/Sky', -100, -100, 1, 1);
-				bg.setGraphicSize(Std.int(bg.width * 0.9));
-				bg.updateHitbox();
-				add(bg);
+				godzillabg = new BGSprite('GodzillaRed/Sky', -100, -100, 1, 1);
+				//godzillabg.setGraphicSize(Std.int(godzillabg.width * 0.9));
+				godzillabg.scale.set(0.9, 0.9); //SCALE.SET SUPREMACY SETGRAPHICSIZE SUCKS!!!!!!
+				godzillabg.updateHitbox();
+				godzillabg.antialiasing = false;
+				add(godzillabg);
 
 				fire = new BGSprite("GodzillaRed/FireBg", -200, -100, 1, 1, ["FireBg"], true);
-				fire.setGraphicSize(Std.int(fire.width * 1.1));
+				fire.scale.set(1.1, 1.1);
+				fire.antialiasing = false;
 				add(fire);
 								
 				mountains = new BGSprite('GodzillaRed/Mountains', -200, -300, 1, 1);
-				mountains.setGraphicSize(Std.int(mountains.width * 0.9));
+				mountains.scale.set(0.9, 0.9);
+				mountains.antialiasing = false;
 				add(mountains);
 
 				magma = new BGSprite("GodzillaRed/Magma", -200, 450, 1, 1, ["Magma"], true);
-				magma.setGraphicSize(Std.int(magma.width * 0.9));
+				magma.scale.set(0.9, 0.9);
+				magma.antialiasing = false;
 				add(magma);
 		}
 
@@ -845,6 +850,11 @@ class PlayState extends MusicBeatState
 		{
 			case 'stress':
 				GameOverSubstate.characterName = 'bf-holding-gf-dead';
+			case 'godzilla':
+				godzillabg.alpha = 0.001; //lmao the only way to optimize this
+				fire.alpha = 0.001;
+				mountains.alpha = 0.001;
+				magma.alpha = 0.001;
 		}
 
 		add(gfGroup); //Needed for blammed lights
@@ -997,7 +1007,7 @@ class PlayState extends MusicBeatState
 				gf.visible = false;
 		}
 
-		switch(curStage)
+		switch(curStage) //foreground sprites
 		{
 			case 'limo':
 				resetFastCar();
@@ -2859,6 +2869,44 @@ class PlayState extends MusicBeatState
 		}*/
 		callOnLuas('onUpdate', [elapsed]);
 
+
+		if (curSong.toLowerCase() == 'godzilla' && curStage == 'GodzillaRed' && curStep >= 80)
+		{
+			FlxTween.tween(godzillabg, {alpha: 1}, 0.7, {
+				ease: FlxEase.linear,
+				onComplete: function(godzillaTween1:FlxTween)
+				{			
+
+				}
+			});
+			FlxTween.tween(fire, {alpha: 1}, 0.7, {
+				ease: FlxEase.linear,
+				onComplete: function(godzillaTween2:FlxTween)
+				{			
+							
+				}
+			});
+			FlxTween.tween(mountains, {alpha: 1}, 0.7, {
+				ease: FlxEase.linear,
+				onComplete: function(godzillaTween3:FlxTween)
+				{			
+							
+				}
+			});
+			FlxTween.tween(magma, {alpha: 1}, 0.7, {
+				ease: FlxEase.linear,
+				onComplete: function(godzillaTween4:FlxTween)
+				{			
+							
+				}
+			});
+			/*
+				godzillabg.alpha = 0;
+				fire.alpha = 0;
+				mountains.alpha = 0;
+				magma.alpha = 0;
+			*/
+		}
 		switch (curStage)
 		{
 			case 'tank':
@@ -3894,20 +3942,6 @@ class PlayState extends MusicBeatState
 		deathCounter = 0;
 		seenCutscene = false;
 
-		#if ACHIEVEMENTS_ALLOWED
-		if(achievementObj != null) {
-			return;
-		} else {
-			var achieve:String = checkForAchievement(['week1_nomiss', 'week2_nomiss', 'week3_nomiss', 'week4_nomiss',
-				'week5_nomiss', 'week6_nomiss', 'week7_nomiss', 'ur_bad',
-				'ur_good', 'hype', 'two_keys', 'toastie', 'debugger']);
-
-			if(achieve != null) {
-				startAchievement(achieve);
-				return;
-			}
-		}
-		#end
 
 		var ret:Dynamic = callOnLuas('onEndSong', [], false);
 		if(ret != FunkinLua.Function_Stop && !transitioning) {
@@ -4013,22 +4047,7 @@ class PlayState extends MusicBeatState
 		}
 	}
 
-	#if ACHIEVEMENTS_ALLOWED
-	var achievementObj:AchievementObject = null;
-	function startAchievement(achieve:String) {
-		achievementObj = new AchievementObject(achieve, camOther);
-		achievementObj.onFinish = achievementEnd;
-		add(achievementObj);
-		trace('Giving achievement ' + achieve);
-	}
-	function achievementEnd():Void
-	{
-		achievementObj = null;
-		if(endingSong && !inCutscene) {
-			endSong();
-		}
-	}
-	#end
+
 
 	public function KillNotes() {
 		while(notes.length > 0) {
@@ -4412,12 +4431,6 @@ class PlayState extends MusicBeatState
 			});
 
 			if (parsedHoldArray.contains(true) && !endingSong) {
-				#if ACHIEVEMENTS_ALLOWED
-				var achieve:String = checkForAchievement(['oversinging']);
-				if (achieve != null) {
-					startAchievement(achieve);
-				}
-				#end
 			}
 			else if (boyfriend.animation.curAnim != null && boyfriend.holdTimer > Conductor.stepCrochet * 0.0011 * boyfriend.singDuration && boyfriend.animation.curAnim.name.startsWith('sing') && !boyfriend.animation.curAnim.name.endsWith('miss'))
 			{
@@ -4864,17 +4877,7 @@ class PlayState extends MusicBeatState
 				limoCorpseTwo.visible = false;
 				limoKillingState = 1;
 
-				#if ACHIEVEMENTS_ALLOWED
-				Achievements.henchmenDeath++;
-				FlxG.save.data.henchmenDeath = Achievements.henchmenDeath;
-				var achieve:String = checkForAchievement(['roadkill_enthusiast']);
-				if (achieve != null) {
-					startAchievement(achieve);
-				} else {
-					FlxG.save.flush();
-				}
-				FlxG.log.add('Deaths: ' + Achievements.henchmenDeath);
-				#end
+
 			}
 		}
 	}
@@ -5178,91 +5181,6 @@ class PlayState extends MusicBeatState
 		setOnLuas('ratingName', ratingName);
 		setOnLuas('ratingFC', ratingFC);
 	}
-
-	#if ACHIEVEMENTS_ALLOWED
-	private function checkForAchievement(achievesToCheck:Array<String> = null):String
-	{
-		if(chartingMode) return null;
-
-		var usedPractice:Bool = (ClientPrefs.getGameplaySetting('practice', false) || ClientPrefs.getGameplaySetting('botplay', false));
-		for (i in 0...achievesToCheck.length) {
-			var achievementName:String = achievesToCheck[i];
-			if(!Achievements.isAchievementUnlocked(achievementName) && !cpuControlled) {
-				var unlock:Bool = false;
-				switch(achievementName)
-				{
-					case 'week1_nomiss' | 'week2_nomiss' | 'week3_nomiss' | 'week4_nomiss' | 'week5_nomiss' | 'week6_nomiss' | 'week7_nomiss':
-						if(isStoryMode && campaignMisses + songMisses < 1 && CoolUtil.difficultyString() == 'HARD' && storyPlaylist.length <= 1 && !changedDifficulty && !usedPractice)
-						{
-							var weekName:String = WeekData.getWeekFileName();
-							switch(weekName) //I know this is a lot of duplicated code, but it's easier readable and you can add weeks with different names than the achievement tag
-							{
-								case 'week1':
-									if(achievementName == 'week1_nomiss') unlock = true;
-								case 'week2':
-									if(achievementName == 'week2_nomiss') unlock = true;
-								case 'week3':
-									if(achievementName == 'week3_nomiss') unlock = true;
-								case 'week4':
-									if(achievementName == 'week4_nomiss') unlock = true;
-								case 'week5':
-									if(achievementName == 'week5_nomiss') unlock = true;
-								case 'week6':
-									if(achievementName == 'week6_nomiss') unlock = true;
-								case 'week7':
-									if(achievementName == 'week7_nomiss') unlock = true;
-							}
-						}
-					case 'ur_bad':
-						if(ratingPercent < 0.2 && !practiceMode) {
-							unlock = true;
-						}
-					case 'ur_good':
-						if(ratingPercent >= 1 && !usedPractice) {
-							unlock = true;
-						}
-					case 'roadkill_enthusiast':
-						if(Achievements.henchmenDeath >= 100) {
-							unlock = true;
-						}
-					case 'oversinging':
-						if(boyfriend.holdTimer >= 10 && !usedPractice) {
-							unlock = true;
-						}
-					case 'hype':
-						if(!boyfriendIdled && !usedPractice) {
-							unlock = true;
-						}
-					case 'two_keys':
-						if(!usedPractice) {
-							var howManyPresses:Int = 0;
-							for (j in 0...keysPressed.length) {
-								if(keysPressed[j]) howManyPresses++;
-							}
-
-							if(howManyPresses <= 2) {
-								unlock = true;
-							}
-						}
-					case 'toastie':
-						if(/*ClientPrefs.framerate <= 60 &&*/ ClientPrefs.lowQuality && !ClientPrefs.globalAntialiasing) {
-							unlock = true;
-						}
-					case 'debugger':
-						if(Paths.formatToSongPath(SONG.song) == 'test' && !usedPractice) {
-							unlock = true;
-						}
-				}
-
-				if(unlock) {
-					Achievements.unlockAchievement(achievementName);
-					return achievementName;
-				}
-			}
-		}
-		return null;
-	}
-	#end
 
 	var curLight:Int = -1;
 	var curLightEvent:Int = -1;

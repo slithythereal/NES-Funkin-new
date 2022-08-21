@@ -1,0 +1,61 @@
+{
+	"song": {
+		"events": [
+			[
+				33480.6629834254,
+				[
+					[
+						"Play Animation",
+						"Scream",
+						"Red"
+					],
+					[
+						"Camera Follow Pos",
+						"550",
+						"-100"
+					]
+				]
+			],
+			[
+				33812.1546961326,
+				[
+					[
+						"Camera Follow Pos",
+						"",
+						""
+					]
+				]
+			],
+			[
+				46408.8397790055,
+				[
+					[
+						"Camera Follow Pos",
+						"1000",
+						"500"
+					]
+				]
+			],
+			[
+				47403.3149171271,
+				[
+					[
+						"Camera Follow Pos",
+						"",
+						""
+					]
+				]
+			],
+			[
+				159696.132596685,
+				[
+					[
+						"Play Animation",
+						"Camera Stare",
+						"Red"
+					]
+				]
+			]
+		]
+	}
+}
