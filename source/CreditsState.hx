@@ -81,6 +81,16 @@ class CreditsState extends MusicBeatState
 		#end
 
 		var pisspoop:Array<Array<String>> = [ //Name - Icon name - Description - Link - BG Color
+			['NES FUNKIN TAINTED RED DEVS'],
+			['Kit-_-', 'kit', 'director/concept artist/sound design\nthe guy ever', 'https://twitter.com/Jason12876749', 'FFFFFF'], //made hex white for now
+			['MadManHalloween', 'madman', 'director', 'https://mobile.twitter.com/halloweemadman', 'FFFFFF'],
+			['Sieggy', 'sieggy', 'Head artist/animator', 'https://twitter.com/SieniorGargoyle/', 'FFFFFF'],
+			['Zomboi', 'zomboi', 'Head musician/sound design', 'https://soundcloud.com/zomboimusic', 'FFFFFF'],
+			['Slithy', 'slithy', 'Head coder', 'https://www.youtube.com/c/TheSlithyGamer4evr/', 'FFFFFF'],
+			['HowToAvenge101', 'avenge', 'musician', 'https://www.youtube.com/channel/UCNfcPwms_4vLXmU1-7BYYwg/', 'FFFFFF'],
+			['Ne_Eo', 'neeo', 'previous coder', 'https://twitter.com/Ne_Eo_Twitch', 'FFFFFF'],
+			['ManibyJelly', 'jelly', 'charter/backup coder', 'https://gamebanana.com/members/2042207', 'FFFFFF'],
+			[''],
 			['Psych Engine Team'],
 			['Shadow Mario',		'shadowmario',		'Main Programmer of Psych Engine',								'https://twitter.com/Shadow_Mario_',	'444444'],
 			['RiverOaken',			'river',			'Main Artist/Animator of Psych Engine',							'https://twitter.com/RiverOaken',		'B42F71'],
@@ -216,7 +226,7 @@ class CreditsState extends MusicBeatState
 					colorTween.cancel();
 				}
 				FlxG.sound.play(Paths.sound('cancelMenu'));
-				MusicBeatState.switchState(new SMenuState());
+				FlxG.switchState(new SMenuState());
 				quitting = true;
 			}
 		}

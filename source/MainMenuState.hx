@@ -15,6 +15,7 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.text.FlxText;
 import flixel.math.FlxMath;
 import flixel.tweens.FlxEase;
+import flixel.util.FlxTimer;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import lime.app.Application;
@@ -74,9 +75,6 @@ class MainMenuState extends MusicBeatState
 		add(menuItems);
 
 		var scale:Float = 1;
-		/*if(optionShit.length > 6) {
-			scale = 6 / optionShit.length;
-		}*/
 
 		for (i in 0...optionShit.length)
 		{
@@ -167,19 +165,16 @@ class MainMenuState extends MusicBeatState
 					}
 					else
 					{
-						FlxFlicker.flicker(spr, 1, 0.06, false, false, function(flick:FlxFlicker)
-						{
-							var daChoice:String = optionShit[curSelected];
+						var daChoice:String = optionShit[curSelected];
 
-							switch (daChoice)
-							{
-								case 'play':
-									MusicBeatState.switchState(new PlayMenuState());
-								case 'settings':
-									MusicBeatState.switchState(new SMenuState());
-									//LoadingState.loadAndSwitchState(new options.OptionsState());
-							}
-						});
+						switch (daChoice)
+						{
+							case 'play':
+								FlxG.switchState(new PlayMenuState());
+							case 'settings':
+								FlxG.switchState(new SMenuState());
+								//LoadingState.loadAndSwitchState(new options.OptionsState());
+						}
 					}
 				});
 			}
@@ -204,8 +199,6 @@ class MainMenuState extends MusicBeatState
 			curSelected = 0;
 		if (curSelected < 0)
 			curSelected = menuItems.length - 1;
-
-		
 
 			switch (curSelected) //square code
 			{

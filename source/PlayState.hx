@@ -417,7 +417,6 @@ class PlayState extends MusicBeatState
 
 		GameOverSubstate.resetVariables();
 		var songName:String = Paths.formatToSongPath(SONG.song);
-
 		curStage = SONG.stage;
 		//trace('stage is: ' + curStage);
 		if(SONG.stage == null || SONG.stage.length < 1) {
@@ -817,12 +816,12 @@ class PlayState extends MusicBeatState
 				foregroundSprites.add(new BGSprite('tank5', 1620, 700, 1.5, 1.5, ['fg']));
 				if(!ClientPrefs.lowQuality) foregroundSprites.add(new BGSprite('tank3', 1300, 1200, 3.5, 2.5, ['fg']));
 			
-			case 'GodzillaRed':	
+			case 'GodzillaRed':
 				GameOverSubstate.deathSoundName = 'Red Kills Bf';
 				GameOverSubstate.loopSoundName = 'Red GameOver';
 				GameOverSubstate.endSoundName = 'Laugh_with_me_fellas';
 				GameOverSubstate.characterName = 'red-bf-pixel-dead';
-
+				
 				godzillabg = new BGSprite('GodzillaRed/Sky', -100, -100, 1, 1);
 				//godzillabg.setGraphicSize(Std.int(godzillabg.width * 0.9));
 				godzillabg.scale.set(0.9, 0.9); //SCALE.SET SUPREMACY SETGRAPHICSIZE SUCKS!!!!!!
@@ -1070,7 +1069,15 @@ class PlayState extends MusicBeatState
 		timeBar = new FlxBar(timeBarBG.x + 4, timeBarBG.y + 4, LEFT_TO_RIGHT, Std.int(timeBarBG.width - 8), Std.int(timeBarBG.height - 8), this,
 			'songPercent', 0, 1);
 		timeBar.scrollFactor.set();
-		timeBar.createFilledBar(0xFF000000, 0xFFFFFFFF);
+		
+		switch(curStage) //changes timebar color based on stage
+		{
+			case 'GodzillaRed':
+				timeBar.createFilledBar(0xFF000000, 0xFFff1000);
+			default:
+				timeBar.createFilledBar(0xFF000000, 0xFFFFFFFF);
+		}
+
 		timeBar.numDivisions = 800; //How much lag this causes?? Should i tone it down to idk, 400 or 200?
 		timeBar.alpha = 0;
 		timeBar.visible = showTime;
