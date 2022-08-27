@@ -29,7 +29,7 @@ class MainMenuState extends MusicBeatState
 	public static var psychEngineVersion:String = '0.6.2'; //This is also used for Discord RPC
 	public static var curSelected:Int = 0;
 
-	var menuItems:FlxTypedGroup<FlxSprite>;
+	var menuItems:FlxTypedGroup<FlxText>;
 	private var camGame:FlxCamera;
 	var square:FlxSprite;
 	var optionShit:Array<String> = [ //play and settings (both copies of mainmenustate or option state or smth)
@@ -40,6 +40,7 @@ class MainMenuState extends MusicBeatState
 	var camFollow:FlxObject;
 	var camFollowPos:FlxObject;
 	var debugKeys:Array<FlxKey>;
+	var menuItem:FlxText;
 
 	override function create()
 	{
@@ -71,7 +72,7 @@ class MainMenuState extends MusicBeatState
 		add(camFollow);
 		add(camFollowPos);
 		
-		menuItems = new FlxTypedGroup<FlxSprite>();
+		menuItems = new FlxTypedGroup<FlxText>();
 		add(menuItems);
 
 		var scale:Float = 1;
@@ -79,14 +80,14 @@ class MainMenuState extends MusicBeatState
 		for (i in 0...optionShit.length)
 		{
 			var offset:Float = 108 - (Math.max(optionShit.length, 4) - 4) * 80;
-			var menuItem:FlxSprite = new FlxSprite(0, (i * 140)  + offset);
+			menuItem = new FlxText(0, (i * 140) + offset);
+			menuItem.setFormat(Paths.font("Pixel_NES.otf"), 100, FlxColor.WHITE, CENTER);
+			menuItem.text = optionShit[i];
 			menuItem.scale.x = scale;
 			menuItem.scale.y = scale;
-			menuItem.loadGraphic(Paths.image('UI stuffs/menuItems/menu_' + optionShit[i]));
 			menuItem.ID = i;
 			menuItem.x += 520;
-			menuItem.y += 150;
-            menuItem.antialiasing = false;
+			menuItem.y += 130;
 			menuItems.add(menuItem);
 			var scr:Float = (optionShit.length - 4) * 0.135;
 			if(optionShit.length < 6) scr = 0;
@@ -150,8 +151,7 @@ class MainMenuState extends MusicBeatState
 				selectedSomethin = true;
 				FlxG.sound.play(Paths.sound('confirmMenu'));
 
-
-				menuItems.forEach(function(spr:FlxSprite)
+				menuItems.forEach(function(spr:FlxText)
 				{
 					if (curSelected != spr.ID)
 					{
@@ -208,7 +208,7 @@ class MainMenuState extends MusicBeatState
 					square.setPosition(440, 380);
 			}
 		
-		menuItems.forEach(function(spr:FlxSprite)
+		menuItems.forEach(function(spr:FlxText)
 		{
 			spr.updateHitbox();
 

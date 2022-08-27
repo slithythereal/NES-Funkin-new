@@ -7,55 +7,56 @@ import Discord.DiscordClient;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
+import flixel.addons.transition.FlxTransitionableState;
 import flixel.effects.FlxFlicker;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.text.FlxText;
 import flixel.math.FlxMath;
 import flixel.tweens.FlxEase;
-import flixel.tweens.FlxTween;
 import flixel.util.FlxTimer;
+import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import lime.app.Application;
 import flixel.input.keyboard.FlxKey;
 
 using StringTools;
 
-class SMenuState extends MusicBeatState //it's called SMenuState bc i had trouble naming it SettingsMenuState -slithy
+class SMenuState extends MusicBeatState
 {
 	public static var curSelected:Int = 0;
-	var menuItems:FlxTypedGroup<FlxSprite>;
+
+	var menuItems:FlxTypedGroup<FlxText>;
 	var square:FlxSprite;
 	var optionShit:Array<String> = [
 		'credits',
 		'options'
 	];
+	var menuItem:FlxText;
 
 	override function create()
 	{
-		WeekData.loadTheFirstEnabledMod();
-
 		#if desktop
 		// Updating Discord Rich Presence
 		DiscordClient.changePresence("In the Menus", null);
 		#end
 
-		
-		menuItems = new FlxTypedGroup<FlxSprite>();
+		menuItems = new FlxTypedGroup<FlxText>();
 		add(menuItems);
 
 		var scale:Float = 1;
+
 		for (i in 0...optionShit.length)
 		{
 			var offset:Float = 108 - (Math.max(optionShit.length, 4) - 4) * 80;
-			var menuItem:FlxSprite = new FlxSprite(0, (i * 140)  + offset);
+			menuItem = new FlxText(0, (i * 140) + offset);
+			menuItem.setFormat(Paths.font("Pixel_NES.otf"), 100, FlxColor.WHITE, CENTER);
+			menuItem.text = optionShit[i];
 			menuItem.scale.x = scale;
 			menuItem.scale.y = scale;
-			menuItem.loadGraphic(Paths.image('UI stuffs/settings/menu_' + optionShit[i]));
 			menuItem.ID = i;
 			menuItem.x += 520;
-			menuItem.y += 150;
-            menuItem.antialiasing = false;
+			menuItem.y += 130;
 			menuItems.add(menuItem);
 			var scr:Float = (optionShit.length - 4) * 0.135;
 			if(optionShit.length < 6) scr = 0;
@@ -88,60 +89,61 @@ class SMenuState extends MusicBeatState //it's called SMenuState bc i had troubl
 			if(FreeplayState.vocals != null) FreeplayState.vocals.volume += 0.5 * elapsed;
 		}
 
-		if (controls.UI_UP_P)
+		if (!selectedSomethin)
 		{
-			FlxG.sound.play(Paths.sound('scrollMenu'));
-			changeItem(-1);
-		}
-
-		if (controls.UI_DOWN_P)
-		{
-			FlxG.sound.play(Paths.sound('scrollMenu'));
-			changeItem(1);
-		}
-
-		if (controls.BACK)
-		{
-			selectedSomethin = true;
-			FlxG.sound.play(Paths.sound('cancelMenu'));
-			FlxG.switchState(new MainMenuState());
-		}
-
-		if (controls.ACCEPT)
-		{
-			selectedSomethin = true;
-			FlxG.sound.play(Paths.sound('confirmMenu'));
-
-
-			menuItems.forEach(function(spr:FlxSprite)
+			if (controls.UI_UP_P)
 			{
-				if (curSelected != spr.ID)
-				{
-					FlxTween.tween(spr, {alpha: 0}, 0.4, {
-						ease: FlxEase.quadOut,
-						onComplete: function(twn:FlxTween)
-						{
-							spr.kill();
-						}
-					});
-				}
-				else
-				{
-					var daChoice:String = optionShit[curSelected];
+				FlxG.sound.play(Paths.sound('scrollMenu'));
+				changeItem(-1);
+			}
 
-					switch (daChoice)
+			if (controls.UI_DOWN_P)
+			{
+				FlxG.sound.play(Paths.sound('scrollMenu'));
+				changeItem(1);
+			}
+
+			if (controls.BACK)
+			{
+				selectedSomethin = true;
+				FlxG.sound.play(Paths.sound('cancelMenu'));
+				FlxG.switchState(new MainMenuState());
+			}
+
+			if (controls.ACCEPT)
+			{
+				selectedSomethin = true;
+				FlxG.sound.play(Paths.sound('confirmMenu'));
+
+
+				menuItems.forEach(function(spr:FlxText)
+				{
+					if (curSelected != spr.ID)
 					{
-						case 'credits':
-							FlxG.switchState(new CreditsState());
-						case 'options':
-							LoadingState.loadAndSwitchState(new options.OptionsState());
+						FlxTween.tween(spr, {alpha: 0}, 0.4, {
+							ease: FlxEase.quadOut,
+							onComplete: function(twn:FlxTween)
+							{
+								spr.kill();
+							}
+						});
 					}
-				}
-			});
+					else
+					{
+						var daChoice:String = optionShit[curSelected];
+
+						switch (daChoice)
+						{
+							case 'credits':
+								FlxG.switchState(new CreditsState());
+							case 'options':
+								LoadingState.loadAndSwitchState(new options.OptionsState());
+						}
+					}
+				});
+			}
 		}
-
 		super.update(elapsed);
-
 	}
 
 	function changeItem(huh:Int = 0)
@@ -161,7 +163,7 @@ class SMenuState extends MusicBeatState //it's called SMenuState bc i had troubl
 					square.setPosition(440, 380);
 			}
 		
-		menuItems.forEach(function(spr:FlxSprite)
+		menuItems.forEach(function(spr:FlxText)
 		{
 			spr.updateHitbox();
 
