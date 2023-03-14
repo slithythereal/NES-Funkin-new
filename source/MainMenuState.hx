@@ -97,9 +97,17 @@ class MainMenuState extends MusicBeatState
 			menuItem.updateHitbox();
 		}
 
+		/**
+			whitebg = new FlxSprite();
+			whitebg.makeGraphic(FlxG.width, FlxG.height, 0xFFFF0000, true);
+			whitebg.screenCenter(X);
+			whitebg.screenCenter(Y);
+			whitebg.scale.set(1.20, 1.20);
+			add(whitebg);
+		**/
 		square = new FlxSprite(); 
-		square.loadGraphic(Paths.image('UI stuffs/square'));
-		square.setPosition(440, 238);
+		square.makeGraphic(64, 64, 0xFFFF0000, true);
+		square.setPosition(440, 240);
 		square.scrollFactor.set();
 		square.scale.set(1, 1);
 		square.antialiasing = true;
@@ -203,9 +211,9 @@ class MainMenuState extends MusicBeatState
 			switch (curSelected) //square code
 			{
 				case 0:
-					square.setPosition(440, 238);
+					square.setPosition(440, 240);
 				case 1:
-					square.setPosition(440, 380);
+					square.setPosition(440, 384);
 			}
 		
 		menuItems.forEach(function(spr:FlxText)

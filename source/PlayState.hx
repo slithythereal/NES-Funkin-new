@@ -310,6 +310,9 @@ class PlayState extends MusicBeatState
 	private var keysArray:Array<Dynamic>;
 	private var controlArray:Array<String>;
 
+	var songName:String = "";
+	var whiteFlash:FlxSprite;
+
 	var precacheList:Map<String, String> = new Map<String, String>();
 
 	override public function create()
@@ -416,7 +419,7 @@ class PlayState extends MusicBeatState
 		#end
 
 		GameOverSubstate.resetVariables();
-		var songName:String = Paths.formatToSongPath(SONG.song);
+		songName = Paths.formatToSongPath(SONG.song);
 		curStage = SONG.stage;
 		//trace('stage is: ' + curStage);
 		if(SONG.stage == null || SONG.stage.length < 1) {
@@ -1289,6 +1292,19 @@ class PlayState extends MusicBeatState
 		}
 		#end
 
+		switch(curStage)
+		{
+			case 'GodzillaRed':
+				whiteFlash = new FlxSprite();
+				whiteFlash.makeGraphic(FlxG.width, FlxG.height, 0xFFFFFFFF, true);
+				whiteFlash.screenCenter(X);
+				whiteFlash.screenCenter(Y);
+				whiteFlash.scale.set(1.20, 1.20);
+				whiteFlash.alpha = 0.001;
+				add(whiteFlash);
+				whiteFlash.cameras = [camHUD];
+		}
+
 		var daSong:String = Paths.formatToSongPath(curSong);
 		if (isStoryMode && !seenCutscene)
 		{
@@ -1703,7 +1719,7 @@ class PlayState extends MusicBeatState
 		senpaiEvil.screenCenter();
 		senpaiEvil.x += 300;
 
-		var songName:String = Paths.formatToSongPath(SONG.song);
+		songName = Paths.formatToSongPath(SONG.song);
 		if (songName == 'roses' || songName == 'thorns')
 		{
 			remove(black);
@@ -1775,7 +1791,7 @@ class PlayState extends MusicBeatState
 	{
 		var cutsceneHandler:CutsceneHandler = new CutsceneHandler();
 
-		var songName:String = Paths.formatToSongPath(SONG.song);
+		songName = Paths.formatToSongPath(SONG.song);
 		dadGroup.alpha = 0.00001;
 		camHUD.visible = false;
 		//inCutscene = true; //this would stop the camera movement, oops
@@ -2444,7 +2460,7 @@ class PlayState extends MusicBeatState
 
 		var daBeats:Int = 0; // Not exactly representative of 'daBeats' lol, just how much it has looped
 
-		var songName:String = Paths.formatToSongPath(SONG.song);
+		songName = Paths.formatToSongPath(SONG.song);
 		var file:String = Paths.json(songName + '/events');
 		#if MODS_ALLOWED
 		if (FileSystem.exists(Paths.modsJson(songName + '/events')) || FileSystem.exists(file)) {
@@ -2907,12 +2923,6 @@ class PlayState extends MusicBeatState
 							
 				}
 			});
-			/*
-				godzillabg.alpha = 0;
-				fire.alpha = 0;
-				mountains.alpha = 0;
-				magma.alpha = 0;
-			*/
 		}
 		switch (curStage)
 		{
@@ -5047,6 +5057,22 @@ class PlayState extends MusicBeatState
 				{
 					trainCooldown = FlxG.random.int(-4, 0);
 					trainStart();
+				}
+		}
+
+		switch(songName)
+		{
+			case 'godzilla':
+				switch(curStep)
+				{
+					case 572:
+						whiteFlash.alpha = 1;
+						FlxTween.tween(whiteFlash, {alpha: 0.001}, 3, {
+						ease: FlxEase.sineIn,
+						onComplete: function(whitetween:FlxTween)
+							{
+							}
+						});
 				}
 		}
 

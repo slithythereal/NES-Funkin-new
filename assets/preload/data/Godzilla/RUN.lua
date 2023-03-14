@@ -5,7 +5,6 @@ local UletterX = RLetterX + letterSpacing;
 local healthDrain = 0;
 function onCreate()
     if getPropertyFromClass('ClientPrefs', 'mechanics') == true then
-
         if getPropertyFromClass('ClientPrefs', 'downScroll') == true and getPropertyFromClass('ClientPrefs', 'middleScroll') == false then
             letterYValue = 120;
         elseif getPropertyFromClass('ClientPrefs', 'middleScroll') == true and getPropertyFromClass('ClientPrefs', 'downScroll') == false then
@@ -20,19 +19,19 @@ function onCreate()
         setTextAlignment('RLetter', 'center')
         setTextSize('RLetter', '75')
         addLuaText('RLetter', true)
-        setObjectCamera('RLetter', 'other')
+        setObjectCamera('RLetter', 'hud')
 
         makeLuaText('ULetter', "U", '700', RLetterX + letterSpacing, letterYValue)
         setTextAlignment('ULetter', 'center')
         setTextSize('ULetter', '75')
         addLuaText('ULetter', true)
-        setObjectCamera('ULetter', 'other')
+        setObjectCamera('ULetter', 'hud')
 
         makeLuaText('NLetter', "N", '700', UletterX + letterSpacing, letterYValue)
         setTextAlignment('NLetter', 'center')
         setTextSize('NLetter', '75')
         addLuaText('NLetter', true)
-        setObjectCamera('NLetter', 'other')
+        setObjectCamera('NLetter', 'hud')
     end
 end
 
