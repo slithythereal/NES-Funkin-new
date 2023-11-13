@@ -1,5 +1,7 @@
 package options;
 
+import objects.GalleryGroup;
+import objects.GameSprite.GameText;
 #if desktop
 import Discord.DiscordClient;
 #end
@@ -24,17 +26,27 @@ import flixel.util.FlxTimer;
 import flixel.input.keyboard.FlxKey;
 import flixel.graphics.FlxGraphic;
 import Controls;
+import flixel.addons.transition.FlxTransitionableState;
 
 using StringTools;
 
 class OptionsState extends MusicBeatState
 {
-	var options:Array<String> = ['NES Funkin','Note Colors', 'Controls', 'Adjust Delay and Combo', 'Graphics', 'Visuals and UI', 'Gameplay'];
-	private var grpOptions:FlxTypedGroup<Alphabet>;
+	public var options:Array<String> = ['NES Funkin', 'Note Colors', 'Controls', 'Adjust Delay and Combo', 'Graphics', 'Visuals and UI', 'Gameplay', 'back'];
+	private var grpOptions:FlxTypedGroup<GameText>;
 	private static var curSelected:Int = 0;
-	public static var menuBG:FlxSprite;
+    
+	//square
+	var squareMulti:Float = 1;
+	var daSquare:FlxSprite;
+    var squarePos:Array<Float> = [];
+
+	var galleryGrp:GalleryGroup;
+	var isInSubState:Bool = false;
 
 	function openSelectedSubstate(label:String) {
+        galleryGrp.setGalleryX();
+
 		switch(label) {
 			case 'NES Funkin':
 				openSubState(new options.NESFunkinSettingsSubState());
@@ -50,48 +62,68 @@ class OptionsState extends MusicBeatState
 				openSubState(new options.GameplaySettingsSubState());
 			case 'Adjust Delay and Combo':
 				LoadingState.loadAndSwitchState(new options.NoteOffsetState());
+			case 'back':
+				FlxTransitionableState.skipNextTransIn = true;
+                FlxTransitionableState.skipNextTransOut = true;
+				LoadingState.loadAndSwitchState(new menus.MenuState());
 		}
 	}
-
-	var selectorLeft:Alphabet;
-	var selectorRight:Alphabet;
 
 	override function create() {
 		#if desktop
 		DiscordClient.changePresence("Options Menu", null);
 		#end
+		
+		persistentUpdate = true;
 
-		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
-		bg.color = 0xFFea71fd;
-		bg.updateHitbox();
+        galleryGrp = new GalleryGroup();
+        add(galleryGrp);
 
-		bg.screenCenter();
-		bg.antialiasing = ClientPrefs.globalAntialiasing;
-		add(bg);
-
-		grpOptions = new FlxTypedGroup<Alphabet>();
+		grpOptions = new FlxTypedGroup<GameText>();
 		add(grpOptions);
+
+        daSquare = new FlxSprite(485, squareMulti);
+        daSquare.makeGraphic(35, 35, 0xFFFF0000);
+        add(daSquare);
+        CommandData.watch(daSquare);
 
 		for (i in 0...options.length)
 		{
-			var optionText:Alphabet = new Alphabet(0, 0, options[i], true, false);
-			optionText.screenCenter();
-			optionText.y += (100 * (i - (options.length / 2))) + 50;
-			grpOptions.add(optionText);
+			var offset:Float = squareMulti + (i * (115/2));
+			var optionsTxt:GameText = new GameText(526);
+            optionsTxt.setFormat(Paths.font("Pixel_NES.otf"), 40, FlxColor.WHITE, CENTER);
+            optionsTxt.text = options[i];
+			if(optionsTxt.text == 'back'){
+                offset += 100;
+			}
+			optionsTxt.y = offset;
+			optionsTxt.ID = i;
+            grpOptions.add(optionsTxt);   
+            optionsTxt.updateHitbox();
+            squarePos.push(offset + 10);
 		}
-
-		selectorLeft = new Alphabet(0, 0, '>', true, false);
-		add(selectorLeft);
-		selectorRight = new Alphabet(0, 0, '<', true, false);
-		add(selectorRight);
-
-		changeSelection();
+	
+		changeItem();
 		ClientPrefs.saveSettings();
 
 		super.create();
 	}
 
+	override function openSubState(SubState:FlxSubState){
+		isInSubState = true;
+		daSquare.alpha = 0;
+		grpOptions.forEach(function(txt:GameText) {
+			txt.alpha = 0;
+		});
+		super.openSubState(SubState);
+	}
+
 	override function closeSubState() {
+		isInSubState = false;
+		daSquare.alpha = 1;
+		grpOptions.forEach(function(txt:GameText) {
+			txt.alpha = 1;
+		});
 		super.closeSubState();
 		ClientPrefs.saveSettings();
 	}
@@ -99,45 +131,24 @@ class OptionsState extends MusicBeatState
 	override function update(elapsed:Float) {
 		super.update(elapsed);
 
-		if (controls.UI_UP_P) {
-			changeSelection(-1);
-		}
-		if (controls.UI_DOWN_P) {
-			changeSelection(1);
-		}
-
-		if (controls.BACK) {
-			FlxG.sound.play(Paths.sound('cancelMenu'));
-			FlxG.switchState(new SMenuState());
-		}
-
-		if (controls.ACCEPT) {
-			openSelectedSubstate(options[curSelected]);
+		if(!isInSubState){
+			if(controls.BACK)
+				openSelectedSubstate('back');
+			if (controls.UI_UP_P) 
+				changeItem(-1);
+			if (controls.UI_DOWN_P) 
+				changeItem(1);
+			if (controls.ACCEPT) 
+				openSelectedSubstate(options[curSelected]);
 		}
 	}
 	
-	function changeSelection(change:Int = 0) {
+	function changeItem(change:Int = 0) {
 		curSelected += change;
 		if (curSelected < 0)
 			curSelected = options.length - 1;
 		if (curSelected >= options.length)
 			curSelected = 0;
-
-		var bullShit:Int = 0;
-
-		for (item in grpOptions.members) {
-			item.targetY = bullShit - curSelected;
-			bullShit++;
-
-			item.alpha = 0.6;
-			if (item.targetY == 0) {
-				item.alpha = 1;
-				selectorLeft.x = item.x - 63;
-				selectorLeft.y = item.y;
-				selectorRight.x = item.x + item.width + 15;
-				selectorRight.y = item.y;
-			}
-		}
-		FlxG.sound.play(Paths.sound('scrollMenu'));
+        daSquare.y = squarePos[curSelected];
 	}
 }

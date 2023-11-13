@@ -43,9 +43,4 @@ class NESFunkinSettingsSubState extends BaseOptionsMenu
 
 		super();
 	}
-
-	function onChangeHitsoundVolume()
-	{
-		FlxG.sound.play(Paths.sound('hitsound'), ClientPrefs.hitsoundVolume);
-	}
 }

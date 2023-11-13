@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='utf-8'?>
+<TextureAtlas imagePath="godzillaLogo.png">
+<SubTexture name="bootup0000" x="0" y="0" width="824" height="395" frameX="0" frameY="0" frameWidth="824" frameHeight="395" />
+<SubTexture name="loop0000" x="0" y="395" width="824" height="395" frameX="0" frameY="0" frameWidth="824" frameHeight="395" />
+<SubTexture name="loop0001" x="824" y="0" width="824" height="395" frameX="0" frameY="0" frameWidth="824" frameHeight="395" />
+<SubTexture name="ending10000" x="0" y="395" width="824" height="395" frameX="0" frameY="0" frameWidth="824" frameHeight="395" />
+<SubTexture name="ending20001" x="824" y="395" width="824" height="395" frameX="0" frameY="0" frameWidth="824" frameHeight="395" />
+<SubTexture name="ending30002" x="0" y="790" width="824" height="395" frameX="0" frameY="0" frameWidth="824" frameHeight="395" />
+</TextureAtlas>

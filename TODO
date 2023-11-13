@@ -1,0 +1,20 @@
+compile game - FINISHED
+remove title screen easter egg - FINISHED
+add INIT - FINISHED
+remove flash events - FINISHED
+redo menu and title screen - FINISHED
+
+decorate UI a little bit - (WORKING ON)
+redo options and credits menu - (WORKING ON)
+
+remove note colors option - UNFINISHED
+redo end transition for title - UNFINISHED
+remove unnecessary features - UNFINISHED
+port lua code to base game - UNFINISHED
+remove unnecessary assets - UNFINISHED
+fix game over screen - UNFINISHED
+remove story mode menu - UNFINISHED
+remove mod folder - UNFINISHED
+remove lua - UNFINISHED
+remove most editors - UNFINISHED
+add hmm support (hopefully) - UNFINISHED

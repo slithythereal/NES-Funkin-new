@@ -11,10 +11,6 @@ function onStepHit()
     elseif curStep == 405 then
         zoomTween = 0.9;
         timeTween = 0.001;
-    elseif curStep == 560 then
-        setProperty('defaultCamZoom', 1.5)
-        zoomTween = 0.9;
-        timeTween = 0.001;
     elseif curStep == 572 then
         zoomTween = 1.7;
         timeTween = 5.94;

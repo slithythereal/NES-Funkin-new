@@ -1,37 +1,37 @@
 {
 	"animations": [
 		{
-			"loop": false,
 			"offsets": [
 				0,
-				0
+				-5
 			],
+			"loop": false,
+			"fps": 24,
 			"anim": "firstDeath",
-			"fps": 24,
-			"name": "Bf dies",
-			"indices": []
+			"indices": [],
+			"name": "Bf dies"
 		},
 		{
+			"offsets": [
+				0,
+				-5
+			],
 			"loop": true,
-			"offsets": [
-				0,
-				-5
-			],
-			"anim": "deathLoop",
 			"fps": 24,
-			"name": "Death loop",
-			"indices": []
+			"anim": "deathLoop",
+			"indices": [],
+			"name": "Death loop"
 		},
 		{
-			"loop": false,
 			"offsets": [
 				0,
 				-5
 			],
-			"anim": "deathConfirm",
+			"loop": false,
 			"fps": 24,
-			"name": "Death confirm",
-			"indices": []
+			"anim": "deathConfirm",
+			"indices": [],
+			"name": "Death confirm"
 		}
 	],
 	"no_antialiasing": true,

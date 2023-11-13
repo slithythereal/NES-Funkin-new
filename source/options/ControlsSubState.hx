@@ -20,6 +20,7 @@ import flixel.util.FlxSave;
 import haxe.Json;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
+import objects.TEMPbg;
 import flixel.util.FlxTimer;
 import flixel.input.keyboard.FlxKey;
 import flixel.graphics.FlxGraphic;
@@ -71,11 +72,8 @@ class ControlsSubState extends MusicBeatSubstate {
 	public function new() {
 		super();
 
-		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
-		bg.color = 0xFFea71fd;
-		bg.screenCenter();
-		bg.antialiasing = ClientPrefs.globalAntialiasing;
-		add(bg);
+		var tempBg:TEMPbg = new TEMPbg();
+		add(tempBg);
 
 		grpOptions = new FlxTypedGroup<Alphabet>();
 		add(grpOptions);
