@@ -36,14 +36,14 @@ class VisualsUISubState extends BaseOptionsMenu
 		squareY = '25';
 
 		var option:Option = new Option('Note Splashes',
-			"If unchecked, hitting \"Sick!\" notes won't show particles.",
+			"If false, hitting \"Sick!\" notes won't show particles.",
 			'noteSplashes',
 			'bool',
 			true);
 		addOption(option);
 
 		var option:Option = new Option('Hide HUD',
-			'If checked, hides most HUD elements.',
+			'If true, hides most HUD elements.',
 			'hideHud',
 			'bool',
 			false);
@@ -65,14 +65,14 @@ class VisualsUISubState extends BaseOptionsMenu
 		addOption(option);
 
 		var option:Option = new Option('Camera Zooms',
-			"If unchecked, the camera won't zoom in on a beat hit.",
+			"If false, the camera won't zoom in on a beat hit.",
 			'camZooms',
 			'bool',
 			true);
 		addOption(option);
 
 		var option:Option = new Option('Score Text Zoom on Hit',
-			"If unchecked, disables the Score text zooming\neverytime you hit a note.",
+			"If false, disables the Score text zooming\neverytime you hit a note.",
 			'scoreZoom',
 			'bool',
 			true);
@@ -92,7 +92,7 @@ class VisualsUISubState extends BaseOptionsMenu
 		
 		#if !mobile
 		var option:Option = new Option('FPS Counter',
-			'If unchecked, hides FPS Counter.',
+			'If false, hides FPS Counter.',
 			'showFPS',
 			'bool',
 			true);
@@ -100,7 +100,7 @@ class VisualsUISubState extends BaseOptionsMenu
 		option.onChange = onChangeFPSCounter;
 		#end
 		
-		var option:Option = new Option('Pause Screen Song:',
+		var option:Option = new Option('Pause Screen Song',
 			"What song do you prefer for the Pause Screen?",
 			'pauseMusic',
 			'string',
@@ -108,15 +108,6 @@ class VisualsUISubState extends BaseOptionsMenu
 			['None', 'Breakfast', 'Tea Time']);
 		addOption(option);
 		option.onChange = onChangePauseMusic;
-		
-		#if CHECK_FOR_UPDATES
-		var option:Option = new Option('Check for Updates',
-			'On Release builds, turn this on to check for updates when you start the game.',
-			'checkForUpdates',
-			'bool',
-			true);
-		addOption(option);
-		#end
 
 		super();
 	}
@@ -124,6 +115,7 @@ class VisualsUISubState extends BaseOptionsMenu
 	var changedMusic:Bool = false;
 	function onChangePauseMusic()
 	{
+		Init.menuMusicTime = FlxG.sound.music.time;
 		if(ClientPrefs.pauseMusic == 'None')
 			FlxG.sound.music.volume = 0;
 		else
@@ -134,13 +126,16 @@ class VisualsUISubState extends BaseOptionsMenu
 
 	override function destroy()
 	{
-		if(changedMusic) FlxG.sound.playMusic(Paths.music('freakyMenu'));
+		if(changedMusic) {
+			Init.playMenuMusic();
+			FlxG.sound.music.time = Init.menuMusicTime;
+		}
 		super.destroy();
 	}
 
 	#if !mobile
 	function onChangeFPSCounter()
-	{
+	{ 
 		if(Main.fpsVar != null)
 			Main.fpsVar.visible = ClientPrefs.showFPS;
 	}

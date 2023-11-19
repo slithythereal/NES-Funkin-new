@@ -17,6 +17,7 @@ class GameOverSubstate extends MusicBeatSubstate
 	var camFollowPos:FlxObject;
 	var updateCamera:Bool = false;
 	var playingDeathSound:Bool = false;
+	var doesUpdateCamera:Bool = true;
 
 	var stageSuffix:String = "";
 
@@ -50,10 +51,20 @@ class GameOverSubstate extends MusicBeatSubstate
 
 		Conductor.songPosition = 0;
 
-		boyfriend = new Boyfriend(x, y, characterName);
-		boyfriend.x += boyfriend.positionArray[0];
-		boyfriend.y += boyfriend.positionArray[1];
+
+		switch(characterName){
+			case 'red-bf-pixel-dead':
+				boyfriend = new Boyfriend(390, 220, characterName);
+				FlxG.camera.zoom = 0.75;
+				doesUpdateCamera = false;
+			default:
+				boyfriend = new Boyfriend(x, y, characterName);
+				boyfriend.x += boyfriend.positionArray[0];
+				boyfriend.y += boyfriend.positionArray[1];
+				trace("updates cam");
+		}
 		add(boyfriend);
+		CommandData.watch(boyfriend);
 
 		camFollow = new FlxPoint(boyfriend.getGraphicMidpoint().x, boyfriend.getGraphicMidpoint().y);
 
@@ -95,10 +106,7 @@ class GameOverSubstate extends MusicBeatSubstate
 			PlayState.chartingMode = false;
 
 			WeekData.loadTheFirstEnabledMod();
-			if (PlayState.isStoryMode)
-				MusicBeatState.switchState(new StoryMenuState());
-			else
-				MusicBeatState.switchState(new FreeplayState());
+			MusicBeatState.switchState(new menus.MenuState());
 
 			FlxG.sound.playMusic(Paths.music('freakyMenu'));
 			PlayState.instance.callOnLuas('onGameOverConfirm', [false]);
@@ -109,31 +117,14 @@ class GameOverSubstate extends MusicBeatSubstate
 			if(boyfriend.animation.curAnim.curFrame >= 12 && !isFollowingAlready)
 			{
 				FlxG.camera.follow(camFollowPos, LOCKON, 1);
-				updateCamera = true;
+				if(doesUpdateCamera)
+					updateCamera = true;
 				isFollowingAlready = true;
 			}
 
 			if (boyfriend.animation.curAnim.finished && !playingDeathSound)
 			{
-				if (PlayState.SONG.stage == 'tank')
-				{
-					playingDeathSound = true;
-					coolStartDeath(0.2);
-					
-					var exclude:Array<Int> = [];
-					//if(!ClientPrefs.cursing) exclude = [1, 3, 8, 13, 17, 21];
-
-					FlxG.sound.play(Paths.sound('jeffGameover/jeffGameover-' + FlxG.random.int(1, 25, exclude)), 1, false, null, true, function() {
-						if(!isEnding)
-						{
-							FlxG.sound.music.fadeIn(0.2, 1, 4);
-						}
-					});
-				}
-				else
-				{
-					coolStartDeath();
-				}
+				coolStartDeath();				
 				boyfriend.startedDeath = true;
 			}
 		}

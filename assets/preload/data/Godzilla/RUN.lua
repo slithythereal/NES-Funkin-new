@@ -1,3 +1,4 @@
+--[[
 local letterYValue = 500;
 local letterSpacing = 60;
 local RLetterX = 225;
@@ -56,3 +57,4 @@ function onUpdate(elapsed)
         end
     end
 end
+]]

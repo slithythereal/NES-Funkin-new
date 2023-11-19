@@ -57,7 +57,7 @@ import StageData;
 import FunkinLua;
 import DialogueBoxPsych;
 import Conductor.Rating;
-
+import objects.RUNtxt;
 #if !flash 
 import flixel.addons.display.FlxRuntimeShader;
 import openfl.filters.ShaderFilter;
@@ -206,11 +206,6 @@ class PlayState extends MusicBeatState
 	var dialogueJson:DialogueFile = null;
 
 	var heyTimer:Float;
-	
-	var godzillabg:BGSprite;
-	var fire:BGSprite;
-	var mountains:BGSprite;
-	var magma:BGSprite;
 
 	public var songScore:Int = 0;
 	public var songHits:Int = 0;
@@ -268,6 +263,13 @@ class PlayState extends MusicBeatState
 	var whiteFlash:FlxSprite;
 
 	var precacheList:Map<String, String> = new Map<String, String>();
+
+	//mechs
+	public var curMECH:String = "";
+	var runTxt:RUNtxt;
+
+	//red stuff
+	var stageGrp:FlxTypedGroup<BGSprite>;
 
 	override public function create()
 	{
@@ -422,6 +424,9 @@ class PlayState extends MusicBeatState
 		dadGroup = new FlxSpriteGroup(DAD_X, DAD_Y);
 		gfGroup = new FlxSpriteGroup(GF_X, GF_Y);
 
+		stageGrp = new FlxTypedGroup<BGSprite>();
+		add(stageGrp);
+
 		switch (curStage)
 		{
 			case 'stage':
@@ -454,39 +459,40 @@ class PlayState extends MusicBeatState
 				GameOverSubstate.loopSoundName = 'Red GameOver';
 				GameOverSubstate.endSoundName = 'Laugh_with_me_fellas';
 				GameOverSubstate.characterName = 'red-bf-pixel-dead';
-				
-				godzillabg = new BGSprite('GodzillaRed/Sky', -100, -100, 1, 1);
-				//godzillabg.setGraphicSize(Std.int(godzillabg.width * 0.9));
-				godzillabg.scale.set(0.9, 0.9); //SCALE.SET SUPREMACY SETGRAPHICSIZE SUCKS!!!!!!
+
+				curMECH = 'run';
+
+				var godzillabg:BGSprite = new BGSprite('GodzillaRed/Sky', -100, -100, 1, 1);
+				godzillabg.scale.set(0.9, 0.9);
 				godzillabg.updateHitbox();
 				godzillabg.antialiasing = false;
-				add(godzillabg);
+				stageGrp.add(godzillabg);
 
-				fire = new BGSprite("GodzillaRed/FireBg", -200, -100, 1, 1, ["FireBg"], true);
+				var fire:BGSprite = new BGSprite("GodzillaRed/FireBg", -200, -100, 1, 1, ["FireBg"], true);
 				fire.scale.set(1.1, 1.1);
 				fire.antialiasing = false;
-				add(fire);
+				stageGrp.add(fire);
 								
-				mountains = new BGSprite('GodzillaRed/Mountains', -200, -300, 1, 1);
-				mountains.scale.set(0.9, 0.9);
+				var mountains:BGSprite = new BGSprite('GodzillaRed/Mountains', -200, -300, 1, 1);
+				mountains.scale.set(0.9, 0.9); //could've used `updateHitbox()` but don't have a need for it so 🫠
 				mountains.antialiasing = false;
-				add(mountains);
+				stageGrp.add(mountains);
 
-				magma = new BGSprite("GodzillaRed/Magma", -200, 450, 1, 1, ["Magma"], true);
+				var magma:BGSprite = new BGSprite("GodzillaRed/Magma", -200, 450, 1, 1, ["Magma"], true);
 				magma.scale.set(0.9, 0.9);
 				magma.antialiasing = false;
-				add(magma);
-
-				godzillabg.alpha = 0.001; //lmao the only way to optimize this
-				fire.alpha = 0.001;
-				mountains.alpha = 0.001;
-				magma.alpha = 0.001;
+				stageGrp.add(magma);
+				
+				if(Paths.formatToSongPath(SONG.song) == 'godzilla'){
+					stageGrp.forEach(function(spr:BGSprite){
+						spr.alpha = 0;
+					});
+				}
 		}
 
 		add(gfGroup); 
 		add(dadGroup);
 		add(boyfriendGroup);
-
 
 		#if LUA_ALLOWED
 		luaDebugGroup = new FlxTypedGroup<DebugLuaText>();
@@ -811,6 +817,21 @@ class PlayState extends MusicBeatState
 		add(botplayTxt);
 		if(ClientPrefs.downScroll) {
 			botplayTxt.y = timeBarBG.y - 78;
+		}
+
+		if(ClientPrefs.mechanics && curMECH == 'run'){
+			var runPos:Array<Float> = [545, 500];
+			if(!ClientPrefs.middleScroll && ClientPrefs.downScroll)
+				runPos = [545, 120];
+			else if(ClientPrefs.middleScroll && ClientPrefs.downScroll)
+				runPos = [750, 120];
+			else if(ClientPrefs.middleScroll && !ClientPrefs.downScroll)
+				runPos = [750, 500];
+			
+			runTxt = new RUNtxt(runPos[0], runPos[1]);
+			add(runTxt);
+	
+			runTxt.cameras = [camHUD];
 		}
 
 		strumLineNotes.cameras = [camHUD];
@@ -1971,15 +1992,21 @@ class PlayState extends MusicBeatState
 		{
 			iconP1.swapOldIcon();
 		}*/
+
 		callOnLuas('onUpdate', [elapsed]);
 
+		if(ClientPrefs.mechanics){
+			if(curMECH == 'run' && runTxt.isRunningHealthDrain)
+			{
+				health -= (runTxt.healthDrainVar * elapsed);
+			}
+		}
 
-		if (curSong.toLowerCase() == 'godzilla' && curStage == 'GodzillaRed' && curStep >= 80)
+		if (curSong.toLowerCase() == 'godzilla' && curStage == 'GodzillaRed' && curStep == 80)
 		{
-			FlxTween.tween(godzillabg, {alpha: 1}, 0.7, {ease: FlxEase.linear});
-			FlxTween.tween(fire, {alpha: 1}, 0.7, {ease: FlxEase.linear});
-			FlxTween.tween(mountains, {alpha: 1}, 0.7, {ease: FlxEase.linear});
-			FlxTween.tween(magma, {alpha: 1}, 0.7, {ease: FlxEase.linear});
+			stageGrp.forEach(function(spr:BGSprite){
+				FlxTween.tween(spr, {alpha: 1}, 0.7, {ease:	FlxEase.linear});
+			});
 		}
 
 		if(!inCutscene) {
@@ -3296,6 +3323,15 @@ class PlayState extends MusicBeatState
 			var animToPlay:String = singAnimations[Std.int(Math.abs(daNote.noteData))] + 'miss' + daNote.animSuffix;
 			char.playAnim(animToPlay, true);
 		}
+
+		if(ClientPrefs.mechanics && curMECH == 'run'){
+			//run mech
+			if(songMisses == 5 || songMisses == 10 || songMisses == 15) { //test, gonna make it link to accuracy
+				if(runTxt.strike < runTxt.runArray.length)
+					runTxt.addStrike(1);
+			}
+		}
+		
 
 		callOnLuas('noteMiss', [notes.members.indexOf(daNote), daNote.noteData, daNote.noteType, daNote.isSustainNote]);
 	}

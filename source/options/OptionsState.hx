@@ -32,7 +32,7 @@ using StringTools;
 
 class OptionsState extends MusicBeatState
 {
-	public var options:Array<String> = ['NES Funkin', 'Note Colors', 'Controls', 'Adjust Delay and Combo', 'Graphics', 'Visuals and UI', 'Gameplay', 'back'];
+	public var options:Array<String> = ['NES Funkin', 'Controls', 'Adjust Delay and Combo', 'Graphics', 'Visuals and UI', 'Gameplay', 'back'];
 	private var grpOptions:FlxTypedGroup<GameText>;
 	private static var curSelected:Int = 0;
     
@@ -50,8 +50,6 @@ class OptionsState extends MusicBeatState
 		switch(label) {
 			case 'NES Funkin':
 				openSubState(new options.NESFunkinSettingsSubState());
-			case 'Note Colors':
-				openSubState(new options.NotesSubState());
 			case 'Controls':
 				openSubState(new options.ControlsSubState());
 			case 'Graphics':
@@ -61,6 +59,7 @@ class OptionsState extends MusicBeatState
 			case 'Gameplay':
 				openSubState(new options.GameplaySettingsSubState());
 			case 'Adjust Delay and Combo':
+				Init.menuMusicTime = FlxG.sound.music.time;
 				LoadingState.loadAndSwitchState(new options.NoteOffsetState());
 			case 'back':
 				FlxTransitionableState.skipNextTransIn = true;

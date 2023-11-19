@@ -71,6 +71,9 @@ class Init extends MusicBeatState {
             LoadingState.loadAndSwitchState(new menus.Title());
         });
     }
+
+	public static var menuMusicTime:Float = 0;
+
 	public static function playMenuMusic(){
 		FlxG.sound.playMusic(Paths.music("freakyMenu"));
 		FlxG.sound.music.loopTime = 29531; //29.531 seconds * 1000 = 29531

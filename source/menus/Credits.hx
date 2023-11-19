@@ -14,7 +14,8 @@ class Credits extends MusicBeatSubstate {
     var specialThanksArray:Array<Array<Dynamic>> = [
         ['HowToAvenge101', 'music help', 'https://www.youtube.com/@howtoavenge1016/'],
         ['Ne_Eo', 'previous coder', 'https://twitter.com/Ne_Eo_Twitch'],
-        ['ManibyJelly', 'charter/backup coder', 'https://gamebanana.com/members/2042207']
+        ['ManibyJelly', 'charter/backup coder', 'https://gamebanana.com/members/2042207'],
+        ['CosbyDaf', 'creator of NES godzilla', 'https://www.deviantart.com/cosbydaf']
     ];
 
     public function new() {

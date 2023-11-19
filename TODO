@@ -3,11 +3,12 @@ remove title screen easter egg - FINISHED
 add INIT - FINISHED
 remove flash events - FINISHED
 redo menu and title screen - FINISHED
+remove note colors option - FINISHED
 
 decorate UI a little bit - (WORKING ON)
 redo options and credits menu - (WORKING ON)
+fix RUN mechanic - (WORKING ON)
 
-remove note colors option - UNFINISHED
 redo end transition for title - UNFINISHED
 remove unnecessary features - UNFINISHED
 port lua code to base game - UNFINISHED

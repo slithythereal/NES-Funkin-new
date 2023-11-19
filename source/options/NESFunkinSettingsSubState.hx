@@ -35,10 +35,10 @@ class NESFunkinSettingsSubState extends BaseOptionsMenu
 		rpcTitle = 'NES Funkin Settings Menu'; //for Discord Rich Presence
 
 		var option:Option = new Option('Mechanics',
-		'If checked, it turns on the mechanics.',
+		'If true, it turns on the mechanics.',
 		'mechanics',
 		'bool',
-		false);
+		true);
 		addOption(option);
 
 		super();

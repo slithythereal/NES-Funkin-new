@@ -147,10 +147,8 @@ class BaseOptionsMenu extends MusicBeatSubstate
 			changeSelection(1);
 		}
 
-		if (controls.BACK) {
+		if (controls.BACK) 
 			close();
-			FlxG.sound.play(Paths.sound('cancelMenu'));
-		}
 
 		if(FlxG.keys.justPressed.TAB)
 			toggleDescText();
@@ -213,9 +211,7 @@ class BaseOptionsMenu extends MusicBeatSubstate
 
 									curOption.curOption = num;
 									curOption.setValue(curOption.options[num]); //lol
-									//trace(curOption.options[num]);
 							}
-							//updateTextFrom(curOption);
 							curOption.change();
 							changeText();
 						} else if(curOption.type != 'string') {
@@ -231,7 +227,6 @@ class BaseOptionsMenu extends MusicBeatSubstate
 								case 'float' | 'percent':
 									curOption.setValue(FlxMath.roundDecimal(holdValue, curOption.decimals));
 							}
-							//updateTextFrom(curOption);
 							curOption.change();
 							changeText();
 						}
@@ -240,9 +235,7 @@ class BaseOptionsMenu extends MusicBeatSubstate
 					if(curOption.type != 'string') {
 						holdTime += elapsed;
 					}
-				} else if(controls.UI_LEFT_R || controls.UI_RIGHT_R) {
-					clearHold();
-				}
+				} 
 			}
 
 			if(controls.RESET)
@@ -257,12 +250,10 @@ class BaseOptionsMenu extends MusicBeatSubstate
 						{
 							leOption.curOption = leOption.options.indexOf(leOption.getValue());
 						}
-						//updateTextFrom(leOption);
-						changeText();
 					}
+					changeText();
 					leOption.change();
 				}
-				FlxG.sound.play(Paths.sound('cancelMenu'));
 			}
 		}
 
@@ -285,23 +276,7 @@ class BaseOptionsMenu extends MusicBeatSubstate
 					txt.text = optionsArray[curSelected].name + ': ' + optionsArray[curSelected].getValue();
 			}
 		});
-		trace(optionsArray[curSelected].name + "'s var is now " + optionsArray[curSelected].getValue());
-	}
-
-	function updateTextFrom(option:Option) {
-		var text:String = option.displayFormat;
-		var val:Dynamic = option.getValue();
-		if(option.type == 'percent') val *= 100;
-		var def:Dynamic = option.defaultValue;
-		option.text = text.replace('%v', val).replace('%d', def);
-	}
-
-	function clearHold()
-	{
-		if(holdTime > 0.5) {
-			FlxG.sound.play(Paths.sound('scrollMenu'));
-		}
-		holdTime = 0;
+		//trace(optionsArray[curSelected].name + "'s var is now " + optionsArray[curSelected].getValue());
 	}
 	
 	function changeSelection(change:Int = 0)
@@ -327,7 +302,7 @@ class BaseOptionsMenu extends MusicBeatSubstate
 			boyfriend.visible = optionsArray[curSelected].showBoyfriend;
 		}
 		curOption = optionsArray[curSelected]; //shorter lol
-		trace("CURSELECTED: " + optionsArray[curSelected].name + " VAR = " + optionsArray[curSelected].getValue());
+		//trace("CURSELECTED: " + optionsArray[curSelected].name + " VAR = " + optionsArray[curSelected].getValue());
 	}
 
 	function toggleDescText()

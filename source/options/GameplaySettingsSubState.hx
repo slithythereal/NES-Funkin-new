@@ -36,6 +36,9 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 
 		squareY = '1';
 
+		if(ClientPrefs.hitsoundVolume <= 0)
+			onChangeHitsoundVolume();
+
 		var option:Option = new Option('Controller Mode',
 			'Check this if you want to play with\na controller instead of using your Keyboard.',
 			'controllerMode',
@@ -45,35 +48,35 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 
 		//I'd suggest using "Downscroll" as an example for making your own option since it is the simplest here
 		var option:Option = new Option('Downscroll', //Name
-			'If checked, notes go Down instead of Up, simple enough.', //Description
+			'If true, notes go Down instead of Up, simple enough.', //Description
 			'downScroll', //Save data variable name
 			'bool', //Variable type
 			false); //Default value
 		addOption(option);
 
 		var option:Option = new Option('Middlescroll',
-			'If checked, your notes get centered.',
+			'If true, your notes get centered.',
 			'middleScroll',
 			'bool',
 			false);
 		addOption(option);
 
 		var option:Option = new Option('Opponent Notes',
-			'If unchecked, opponent notes get hidden.',
+			'If false, opponent notes get hidden.',
 			'opponentStrums',
 			'bool',
 			true);
 		addOption(option);
 
 		var option:Option = new Option('Ghost Tapping',
-			"If checked, you won't get misses from pressing keys\nwhile there are no notes able to be hit.",
+			"If true, you won't get misses from pressing keys\nwhile there are no notes able to be hit.",
 			'ghostTapping',
 			'bool',
 			true);
 		addOption(option);
 
 		var option:Option = new Option('Disable Reset Button',
-			"If checked, pressing Reset won't do anything.",
+			"If true, pressing Reset won't do anything.",
 			'noReset',
 			'bool',
 			false);
