@@ -276,7 +276,6 @@ class BaseOptionsMenu extends MusicBeatSubstate
 					txt.text = optionsArray[curSelected].name + ': ' + optionsArray[curSelected].getValue();
 			}
 		});
-		//trace(optionsArray[curSelected].name + "'s var is now " + optionsArray[curSelected].getValue());
 	}
 	
 	function changeSelection(change:Int = 0)
@@ -301,14 +300,13 @@ class BaseOptionsMenu extends MusicBeatSubstate
 		{
 			boyfriend.visible = optionsArray[curSelected].showBoyfriend;
 		}
-		curOption = optionsArray[curSelected]; //shorter lol
-		//trace("CURSELECTED: " + optionsArray[curSelected].name + " VAR = " + optionsArray[curSelected].getValue());
+		curOption = optionsArray[curSelected]; 
 	}
 
 	function toggleDescText()
 	{
 		descText.visible = !descText.visible;
-		descBox.visible = !descText.visible;
+		descBox.visible = !descBox.visible;
 	}
 	public function reloadBoyfriend()
 	{

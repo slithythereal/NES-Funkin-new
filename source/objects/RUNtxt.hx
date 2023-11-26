@@ -23,9 +23,9 @@ class RUNtxt extends FlxGroup
         add(runGrp);
 
         for(i in 0...runArray.length){
-            var offset:Float = x + (i * 60);
+            var offset:Float = x + (i * 40);
             var txt:RunLetter = new RunLetter(offset, y, 0, runArray[i]);
-            txt.setFormat(Paths.font("Pixel_NES.otf"), 75, FlxColor.WHITE, CENTER);
+            txt.setFormat(Paths.font("Pixel_NES.otf"), 50, FlxColor.WHITE, CENTER);
             txt.ID = i;
             txt.updateHitbox();
             runGrp.add(txt);

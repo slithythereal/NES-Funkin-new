@@ -13,6 +13,21 @@
 						"Camera Follow Pos",
 						"550",
 						"-100"
+					],
+					[
+						"Camera Zoom Tween",
+						"cuh",
+						"1.5, 0.001"
+					]
+				]
+			],
+			[
+				33491.0220994475,
+				[
+					[
+						"Camera Zoom Tween",
+						"cuh2",
+						"2.2, 0.56"
 					]
 				]
 			],
@@ -27,6 +42,16 @@
 				]
 			],
 			[
+				34143.6464088398,
+				[
+					[
+						"Camera Zoom Tween",
+						"cuh3",
+						"0.9, 0.001"
+					]
+				]
+			],
+			[
 				47403.3149171271,
 				[
 					[
@@ -37,12 +62,47 @@
 				]
 			],
 			[
+				105745.856353591,
+				[
+					[
+						"Camera Zoom Tween",
+						"pee pee",
+						"1.5, 4.96"
+					]
+				]
+			],
+			[
+				110718.232044199,
+				[
+					[
+						"Camera Zoom Tween",
+						"wee wee",
+						"2.2, 0.001"
+					]
+				]
+			],
+			[
+				111049.723756906,
+				[
+					[
+						"Camera Zoom Tween",
+						"dee dee",
+						"0.9, 0.001"
+					]
+				]
+			],
+			[
 				159696.132596685,
 				[
 					[
 						"Play Animation",
 						"Camera Stare",
 						"Red"
+					],
+					[
+						"Set Property",
+						"dad.idleSuffix",
+						"-stare"
 					]
 				]
 			]

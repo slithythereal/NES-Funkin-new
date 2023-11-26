@@ -7,7 +7,7 @@ import flixel.text.FlxText;
 
 class Credits extends MusicBeatSubstate {
     var credArray:Array<Array<Dynamic>> = [
-        ['Kit', 'director/concept artist/sound design', 'https://twitter.com/Jason12876749'],
+        ['Kit', 'director/concept artist/sound design', 'https://twitter.com/Kitcoutski2002'],
         ['Sieggy', 'artist/animator', 'https://twitter.com/SieniorGargoyle/'],
         ['Zomboi', 'musician/sound design', 'https://soundcloud.com/zomboimusic']
     ];

@@ -14,32 +14,37 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.FlxCamera;
 import flixel.util.FlxStringUtil;
+import objects.GameSprite.GameText;
 
 class PauseSubState extends MusicBeatSubstate
 {
-	var grpMenuShit:FlxTypedGroup<Alphabet>;
+	var grpMenuShit:FlxTypedGroup<GameText>;
 
 	var menuItems:Array<String> = [];
-	var menuItemsOG:Array<String> = ['Resume', 'Restart Song', 'Change Difficulty', 'Exit to menu'];
-	var difficultyChoices = [];
+	var menuItemsOG:Array<String> = ['Resume', 'Restart Song', 'Exit to menu'];
 	var curSelected:Int = 0;
 
 	var pauseMusic:FlxSound;
 	var practiceText:FlxText;
 	var skipTimeText:FlxText;
-	var skipTimeTracker:Alphabet;
+	var skipTimeTracker:GameText;
 	var curTime:Float = Math.max(0, Conductor.songPosition);
 	//var botplayText:FlxText;
+	var daSquare:FlxSprite;
+	var squareY:Float = 190;
+	var squareMulti:Float = 1;
+	var squarePos:Array<Float> = [];
 
 	public static var songName:String = '';
 
 	public function new(x:Float, y:Float)
 	{
 		super();
-		if(CoolUtil.difficulties.length < 2) menuItemsOG.remove('Change Difficulty'); //No need to change difficulty if there is only one!
 
 		if(PlayState.chartingMode)
 		{
+			squareY = 90;
+			squareMulti = 1.5;
 			menuItemsOG.insert(2, 'Leave Charting Mode');
 			
 			var num:Int = 0;
@@ -53,13 +58,6 @@ class PauseSubState extends MusicBeatSubstate
 			menuItemsOG.insert(5 + num, 'Toggle Botplay');
 		}
 		menuItems = menuItemsOG;
-
-		for (i in 0...CoolUtil.difficulties.length) {
-			var diff:String = '' + CoolUtil.difficulties[i];
-			difficultyChoices.push(diff);
-		}
-		difficultyChoices.push('BACK');
-
 
 		pauseMusic = new FlxSound();
 		if(songName != null) {
@@ -128,8 +126,13 @@ class PauseSubState extends MusicBeatSubstate
 		FlxTween.tween(levelDifficulty, {alpha: 1, y: levelDifficulty.y + 5}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.5});
 		FlxTween.tween(blueballedTxt, {alpha: 1, y: blueballedTxt.y + 5}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.7});
 
-		grpMenuShit = new FlxTypedGroup<Alphabet>();
+		grpMenuShit = new FlxTypedGroup<GameText>();
 		add(grpMenuShit);
+
+		daSquare = new FlxSprite(485, squareY);
+        daSquare.makeGraphic(35, 35, 0xFFFF0000);
+        add(daSquare);
+        CommandData.watch(daSquare);
 
 		regenMenu();
 		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
@@ -192,32 +195,11 @@ class PauseSubState extends MusicBeatSubstate
 
 		if (accepted && (cantUnpause <= 0 || !ClientPrefs.controllerMode))
 		{
-			if (menuItems == difficultyChoices)
-			{
-				if(menuItems.length - 1 != curSelected && difficultyChoices.contains(daSelected)) {
-					var name:String = PlayState.SONG.song;
-					var poop = Highscore.formatSong(name, curSelected);
-					PlayState.SONG = Song.loadFromJson(poop, name);
-					PlayState.storyDifficulty = curSelected;
-					MusicBeatState.resetState();
-					FlxG.sound.music.volume = 0;
-					PlayState.changedDifficulty = true;
-					PlayState.chartingMode = false;
-					return;
-				}
-
-				menuItems = menuItemsOG;
-				regenMenu();
-			}
 
 			switch (daSelected)
 			{
 				case "Resume":
 					close();
-				case 'Change Difficulty':
-					menuItems = difficultyChoices;
-					deleteSkipTimeText();
-					regenMenu();
 				case 'Toggle Practice Mode':
 					PlayState.instance.practiceMode = !PlayState.instance.practiceMode;
 					PlayState.changedDifficulty = true;
@@ -256,13 +238,10 @@ class PauseSubState extends MusicBeatSubstate
 					PlayState.seenCutscene = false;
 
 					WeekData.loadTheFirstEnabledMod();
-					if(PlayState.isStoryMode) {
-						MusicBeatState.switchState(new menus.MenuState());
-					} else {
-						MusicBeatState.switchState(new FreeplayState());
-					}
+					MusicBeatState.switchState(new menus.MenuState());
+		
 					PlayState.cancelMusicFadeTween();
-					FlxG.sound.playMusic(Paths.music('freakyMenu'));
+					Init.playMenuMusic();
 					PlayState.changedDifficulty = false;
 					PlayState.chartingMode = false;
 			}
@@ -301,7 +280,6 @@ class PauseSubState extends MusicBeatSubstate
 	override function destroy()
 	{
 		pauseMusic.destroy();
-
 		super.destroy();
 	}
 
@@ -316,19 +294,25 @@ class PauseSubState extends MusicBeatSubstate
 		if (curSelected >= menuItems.length)
 			curSelected = 0;
 
+		grpMenuShit.forEach(function(txt:GameText){ //couldn't get this working in the for function
+			if(txt.ID == curSelected)
+				trace("CURSELECTED: " + menuItems[curSelected]);
+		});
+
+        daSquare.y = squarePos[curSelected];
+
 		var bullShit:Int = 0;
 
 		for (item in grpMenuShit.members)
 		{
-			item.targetY = bullShit - curSelected;
+			//item.targetY = bullShit - curSelected;
 			bullShit++;
 
-			item.alpha = 0.6;
 			// item.setGraphicSize(Std.int(item.width * 0.8));
 
-			if (item.targetY == 0)
-			{
-				item.alpha = 1;
+			//if (item.targetY == 0)
+			//{
+				//item.alpha = 1;
 				// item.setGraphicSize(Std.int(item.width));
 
 				if(item == skipTimeTracker)
@@ -336,7 +320,7 @@ class PauseSubState extends MusicBeatSubstate
 					curTime = Math.max(0, Conductor.songPosition);
 					updateSkipTimeText();
 				}
-			}
+			//}
 		}
 	}
 
@@ -349,25 +333,28 @@ class PauseSubState extends MusicBeatSubstate
 		}
 
 		for (i in 0...menuItems.length) {
-			var item = new Alphabet(0, 70 * i + 30, menuItems[i], true, false);
-			item.isMenuItem = true;
-			item.targetY = i;
+			var offset:Float = squareY + (i * 115/squareMulti);
+			var item = new GameText(526, offset, 0, menuItems[i]);
+			item.setFormat(Paths.font("Pixel_NES.otf"), 40, FlxColor.WHITE, CENTER);
+			item.updateHitbox();
 			grpMenuShit.add(item);
+			CommandData.watch(item);
 
 			if(menuItems[i] == 'Skip Time')
 			{
-				skipTimeText = new FlxText(0, 0, 0, '', 64);
-				skipTimeText.setFormat(Paths.font("Pixel_NES.otf"), 64, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+				skipTimeText = new GameText(0, 0, 0, '');
+				skipTimeText.setFormat(item.font, item.size, item.color, item.alignment);
 				skipTimeText.scrollFactor.set();
-				skipTimeText.borderSize = 2;
 				skipTimeTracker = item;
 				add(skipTimeText);
 
 				updateSkipTextStuff();
 				updateSkipTimeText();
 			}
+			squarePos.push(offset + 10);
 		}
 		curSelected = 0;
+		//daSquare.y = squarePos[0];
 		changeSelection();
 	}
 	

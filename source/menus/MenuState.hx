@@ -1,5 +1,6 @@
 package menus;
 
+import objects.Square;
 import flixel.tweens.FlxEase;
 import editors.CharacterEditorState;
 import flixel.group.FlxGroup.FlxTypedGroup;
@@ -30,7 +31,7 @@ class MenuState extends MusicBeatState {
 	var codesBuffer:String = ''; //titlestate code lol
 	var allowedKeys:String = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
-    var daSquare:FlxSprite;
+    var daSquare:Square;
     var squarePos:Array<Float> = [];
     var squareMulti:Float = 190;
     
@@ -49,10 +50,8 @@ class MenuState extends MusicBeatState {
         optionGrp = new FlxTypedGroup<FlxText>();
         add(optionGrp);
 
-        daSquare = new FlxSprite(485, squareMulti);
-        daSquare.makeGraphic(35, 35, 0xFFFF0000);
+        daSquare = new Square(485, squareMulti);
         add(daSquare);
-        CommandData.watch(daSquare);
 
         for(i in 0...optionsArray.length)
         {

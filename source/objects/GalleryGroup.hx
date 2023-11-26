@@ -24,13 +24,12 @@ class GalleryGroup extends FlxSpriteGroup
         gallery = new FlxBackdrop(Paths.image('NESpanorama'), 0, 0, true, false);
         gallery.velocity.set(-25, 0);
         gallery.setPosition(galleryX, 0);
-        gallery.screenCenter(Y);
         if(isGalleryShowing)
             gallery.alpha = 0.25;
         else
             gallery.alpha = 0; 
         gallery.visible = isGalleryShowing;
-        gallery.scale.set(1.2, 1.2);
+        gallery.scale.set(1.25, 1.25);
         gallery.updateHitbox();
         add(gallery);
         CommandData.watch(gallery);
