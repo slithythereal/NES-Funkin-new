@@ -58,6 +58,7 @@ import FunkinLua;
 import DialogueBoxPsych;
 import Conductor.Rating;
 import objects.RUNtxt;
+import objects.GLITCHshader;
 #if !flash 
 import flixel.addons.display.FlxRuntimeShader;
 import openfl.filters.ShaderFilter;
@@ -267,10 +268,15 @@ class PlayState extends MusicBeatState
 	//mechs
 	public var curMECH:String = "";
 	var runTxt:RUNtxt;
+	public var gameATTRIBUTES:Map<String, Dynamic> = [
+		'doesCamZoom' => true,
+		'isShaderOn' => false
+	];
 
 	//red stuff
 	var stageGrp:FlxTypedGroup<BGSprite>;
-
+	var glitchShader:GLITCHshader;
+	public var curShader:String = "";
 	override public function create()
 	{
 		Paths.clearStoredMemory();
@@ -461,6 +467,8 @@ class PlayState extends MusicBeatState
 				GameOverSubstate.characterName = 'red-bf-pixel-dead';
 
 				curMECH = 'run';
+				gameATTRIBUTES["doesCamZoom"] = false;
+				gameATTRIBUTES['isShaderOn'] = true;
 
 				var godzillabg:BGSprite = new BGSprite('GodzillaRed/Sky', -100, -100, 1, 1);
 				godzillabg.scale.set(0.9, 0.9);
@@ -482,6 +490,14 @@ class PlayState extends MusicBeatState
 				magma.scale.set(0.9, 0.9);
 				magma.antialiasing = false;
 				stageGrp.add(magma);
+				
+				if(gameATTRIBUTES['isShaderOn']){
+					curShader == 'glitch';
+					glitchShader = new GLITCHshader();
+					var filterArray:Array<BitmapFilter> = [new ShaderFilter(glitchShader)];
+					camGame.setFilters(filterArray);
+					camHUD.setFilters(filterArray);
+				}
 				
 				if(Paths.formatToSongPath(SONG.song) == 'godzilla'){
 					stageGrp.forEach(function(spr:BGSprite){
@@ -804,14 +820,14 @@ class PlayState extends MusicBeatState
 		reloadHealthBarColors();
 
 		scoreTxt = new FlxText(0, healthBarBG.y + 36, FlxG.width, "", 20);
-		scoreTxt.setFormat(Paths.font("Pixel_NES.otf"), 17, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		scoreTxt.setFormat(Paths.font("Pixel_NES.otf"), 17, FlxColor.WHITE, CENTER);
 		scoreTxt.scrollFactor.set();
 		scoreTxt.borderSize = 1.25;
 		scoreTxt.visible = !ClientPrefs.hideHud;
 		add(scoreTxt);
 
-		botplayTxt = new FlxText(400, timeBarBG.y + 55, FlxG.width - 800, "BOTPLAY", 32);
-		botplayTxt.setFormat(Paths.font("Pixel_NES.otf"), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		botplayTxt = new FlxText(400, timeBarBG.y + 55, FlxG.width - 800, "NERRRRRDDDDDDD!!!", 32);
+		botplayTxt.setFormat(Paths.font("Pixel_NES.otf"), 32, FlxColor.WHITE, CENTER);
 		botplayTxt.scrollFactor.set();
 		botplayTxt.borderSize = 1.25;
 		botplayTxt.visible = cpuControlled;
@@ -1389,17 +1405,14 @@ class PlayState extends MusicBeatState
 	}
 
 	public function addBehindGF(obj:FlxObject)
-	{
 		insert(members.indexOf(gfGroup), obj);
-	}
+	
 	public function addBehindBF(obj:FlxObject)
-	{
 		insert(members.indexOf(boyfriendGroup), obj);
-	}
+	
 	public function addBehindDad (obj:FlxObject)
-	{
 		insert(members.indexOf(dadGroup), obj);
-	}
+	
 
 	public function clearNotesBefore(time:Float)
 	{
@@ -1948,6 +1961,8 @@ class PlayState extends MusicBeatState
 			if(curMECH == 'run' && runTxt.isRunningHealthDrain)
 			{
 				health -= (runTxt.healthDrainVar * elapsed);
+				if(gameATTRIBUTES['isShaderOn'] && curShader == 'glitch')
+					glitchShader.update(elapsed * 3);
 			}
 		}
 
@@ -1998,12 +2013,14 @@ class PlayState extends MusicBeatState
 		// FlxG.watch.addQuick('VOL', vocals.amplitudeLeft);
 		// FlxG.watch.addQuick('VOLRight', vocals.amplitudeRight);
 
-		var mult:Float = FlxMath.lerp(1, iconP1.scale.x, CoolUtil.boundTo(1 - (elapsed * 9), 0, 1));
-		iconP1.scale.set(mult, mult);
-		iconP1.updateHitbox();
+		//icon code is the worst ever, if i could fix this I would -slithy
+		var mult1:Float = FlxMath.lerp(1, iconP1.scale.x, CoolUtil.boundTo(1 - (elapsed * 9), 0, 1));
+		iconP1.scale.set(mult1, mult1);
 
-		var mult:Float = FlxMath.lerp(1, iconP2.scale.x, CoolUtil.boundTo(1 - (elapsed * 9), 0, 1));
-		iconP2.scale.set(mult, mult);
+		var mult2:Float = FlxMath.lerp(1, iconP2.scale.x, CoolUtil.boundTo(1 - (elapsed * 9), 0, 1));
+		iconP2.scale.set(mult2, mult2);
+	
+		iconP1.updateHitbox();
 		iconP2.updateHitbox();
 
 		var iconOffset:Int = 26;
@@ -2316,6 +2333,9 @@ class PlayState extends MusicBeatState
 				for (timer in modchartTimers) {
 					timer.active = true;
 				}
+
+				if(gameATTRIBUTES['isShaderOn'] && curMECH == 'run' && curShader == 'glitch')
+					glitchShader.glitchAmount.value[0] = 0.0;
 				openSubState(new GameOverSubstate(boyfriend.getScreenPosition().x - boyfriend.positionArray[0], boyfriend.getScreenPosition().y - boyfriend.positionArray[1], camFollowPos.x, camFollowPos.y));
 
 				// MusicBeatState.switchState(new GameOverState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
@@ -3573,6 +3593,7 @@ class PlayState extends MusicBeatState
 		iconP1.scale.set(1.2, 1.2);
 		iconP2.scale.set(1.2, 1.2);
 
+
 		iconP1.updateHitbox();
 		iconP2.updateHitbox();
 
@@ -3606,7 +3627,7 @@ class PlayState extends MusicBeatState
 				moveCameraSection();
 			}
 
-			if (camZooming && FlxG.camera.zoom < 1.35 && ClientPrefs.camZooms)
+			if (camZooming && FlxG.camera.zoom < 1.35 && ClientPrefs.camZooms && gameATTRIBUTES["doesCamZoom"]) //zooming function?
 			{
 				FlxG.camera.zoom += 0.015 * camZoomingMult;
 				camHUD.zoom += 0.03 * camZoomingMult;
