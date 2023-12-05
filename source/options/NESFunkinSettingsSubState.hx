@@ -41,6 +41,13 @@ class NESFunkinSettingsSubState extends BaseOptionsMenu
 		true);
 		addOption(option);
 
+		var option:Option = new Option('NES FUNKIN SHADERS', 
+		'If true, it turns on the shaders used in this mod!',
+		'nesSHADERS',
+		'bool',
+		true);
+		addOption(option);
+
 		super();
 	}
 }

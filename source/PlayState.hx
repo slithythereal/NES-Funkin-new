@@ -58,7 +58,7 @@ import FunkinLua;
 import DialogueBoxPsych;
 import Conductor.Rating;
 import objects.RUNtxt;
-import objects.GLITCHshader;
+import objects.filters.*;
 #if !flash 
 import flixel.addons.display.FlxRuntimeShader;
 import openfl.filters.ShaderFilter;
@@ -261,9 +261,10 @@ class PlayState extends MusicBeatState
 	private var controlArray:Array<String>;
 
 	var songName:String = "";
-	var whiteFlash:FlxSprite;
 
 	var precacheList:Map<String, String> = new Map<String, String>();
+
+	var timeBarCOLORS:Array<FlxColor> = [0xFF000000, 0xFFFFFFFF];
 
 	//mechs
 	public var curMECH:String = "";
@@ -276,7 +277,8 @@ class PlayState extends MusicBeatState
 	//red stuff
 	var stageGrp:FlxTypedGroup<BGSprite>;
 	var glitchShader:GLITCHshader;
-	public var curShader:String = "";
+	var chromaticShader:CHROMATICshader;
+
 	override public function create()
 	{
 		Paths.clearStoredMemory();
@@ -467,8 +469,10 @@ class PlayState extends MusicBeatState
 				GameOverSubstate.characterName = 'red-bf-pixel-dead';
 
 				curMECH = 'run';
+				timeBarCOLORS = [0xFF000000, 0xFFff1000];
 				gameATTRIBUTES["doesCamZoom"] = false;
-				gameATTRIBUTES['isShaderOn'] = true;
+				if(ClientPrefs.nesSHADERS)
+					gameATTRIBUTES['isShaderOn'] = true;
 
 				var godzillabg:BGSprite = new BGSprite('GodzillaRed/Sky', -100, -100, 1, 1);
 				godzillabg.scale.set(0.9, 0.9);
@@ -492,11 +496,12 @@ class PlayState extends MusicBeatState
 				stageGrp.add(magma);
 				
 				if(gameATTRIBUTES['isShaderOn']){
-					curShader == 'glitch';
 					glitchShader = new GLITCHshader();
-					var filterArray:Array<BitmapFilter> = [new ShaderFilter(glitchShader)];
+					chromaticShader = new CHROMATICshader(0.001);
+					var filterArray:Array<BitmapFilter> = [new ShaderFilter(glitchShader), new ShaderFilter(chromaticShader)];
 					camGame.setFilters(filterArray);
 					camHUD.setFilters(filterArray);
+					camOther.setFilters(filterArray);
 				}
 				
 				if(Paths.formatToSongPath(SONG.song) == 'godzilla'){
@@ -568,17 +573,7 @@ class PlayState extends MusicBeatState
 		var gfVersion:String = SONG.gfVersion;
 		if(gfVersion == null || gfVersion.length < 1)
 		{
-			switch (curStage)
-			{
-				default:
-					gfVersion = 'gf';
-			}
-
-			switch(Paths.formatToSongPath(SONG.song))
-			{
-				case 'stress':
-					gfVersion = 'pico-speaker';
-			}
+			gfVersion = 'gf';
 			SONG.gfVersion = gfVersion; //Fix for the Chart Editor
 		}
 
@@ -648,9 +643,8 @@ class PlayState extends MusicBeatState
 		if(ClientPrefs.downScroll) timeTxt.y = FlxG.height - 44;
 
 		if(ClientPrefs.timeBarType == 'Song Name')
-		{
 			timeTxt.text = SONG.song;
-		}
+		
 		updateTime = showTime;
 
 		timeBarBG = new AttachedSprite('timeBar');
@@ -667,15 +661,7 @@ class PlayState extends MusicBeatState
 		timeBar = new FlxBar(timeBarBG.x + 4, timeBarBG.y + 4, LEFT_TO_RIGHT, Std.int(timeBarBG.width - 8), Std.int(timeBarBG.height - 8), this,
 			'songPercent', 0, 1);
 		timeBar.scrollFactor.set();
-		
-		switch(curStage) //changes timebar color based on stage
-		{
-			case 'GodzillaRed':
-				timeBar.createFilledBar(0xFF000000, 0xFFff1000);
-			default:
-				timeBar.createFilledBar(0xFF000000, 0xFFFFFFFF);
-		}
-
+		timeBar.createFilledBar(timeBarCOLORS[0], timeBarCOLORS[1]);
 		timeBar.numDivisions = 800; //How much lag this causes?? Should i tone it down to idk, 400 or 200?
 		timeBar.alpha = 0;
 		timeBar.visible = showTime;
@@ -902,19 +888,6 @@ class PlayState extends MusicBeatState
 			}
 		}
 		#end
-
-		switch(curStage)
-		{
-			case 'GodzillaRed':
-				whiteFlash = new FlxSprite();
-				whiteFlash.makeGraphic(FlxG.width, FlxG.height, 0xFFFFFFFF, true);
-				whiteFlash.screenCenter(X);
-				whiteFlash.screenCenter(Y);
-				whiteFlash.scale.set(1.20, 1.20);
-				whiteFlash.alpha = 0.001;
-				add(whiteFlash);
-				whiteFlash.cameras = [camHUD];
-		}
 
 		var daSong:String = Paths.formatToSongPath(curSong);
 		if (isStoryMode && !seenCutscene)
@@ -1957,12 +1930,15 @@ class PlayState extends MusicBeatState
 
 		callOnLuas('onUpdate', [elapsed]);
 
+
 		if(ClientPrefs.mechanics){
 			if(curMECH == 'run' && runTxt.isRunningHealthDrain)
 			{
 				health -= (runTxt.healthDrainVar * elapsed);
-				if(gameATTRIBUTES['isShaderOn'] && curShader == 'glitch')
+				if(gameATTRIBUTES['isShaderOn']){
 					glitchShader.update(elapsed * 3);
+				}
+				
 			}
 		}
 
@@ -2334,8 +2310,11 @@ class PlayState extends MusicBeatState
 					timer.active = true;
 				}
 
-				if(gameATTRIBUTES['isShaderOn'] && curMECH == 'run' && curShader == 'glitch')
+				if(gameATTRIBUTES['isShaderOn'] && curMECH == 'run')
+				{
 					glitchShader.glitchAmount.value[0] = 0.0;
+					chromaticShader.setChrome(0.001);
+				}
 				openSubState(new GameOverSubstate(boyfriend.getScreenPosition().x - boyfriend.positionArray[0], boyfriend.getScreenPosition().y - boyfriend.positionArray[1], camFollowPos.x, camFollowPos.y));
 
 				// MusicBeatState.switchState(new GameOverState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
@@ -3281,9 +3260,12 @@ class PlayState extends MusicBeatState
 			if(songMisses == 5 || songMisses == 10 || songMisses == 15) { //test, gonna make it link to accuracy
 				if(runTxt.strike < runTxt.runArray.length)
 					runTxt.addStrike(1);
+				if(gameATTRIBUTES['isShaderOn']){
+					chromaticShader.setChrome(chromaticShader.chromeOFFSET += (chromaticShader.chromShaderAddVar * (runTxt.strike + 1)));
+					glitchShader.glitchAmount.value[0] += 0.25;
+				}
 			}
 		}
-		
 
 		callOnLuas('noteMiss', [notes.members.indexOf(daNote), daNote.noteData, daNote.noteType, daNote.isSustainNote]);
 	}

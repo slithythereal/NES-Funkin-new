@@ -1,4 +1,4 @@
-package objects;
+package objects.filters;
 
 import flixel.FlxG;
 import flixel.system.FlxAssets.FlxShader;
