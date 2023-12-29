@@ -9,6 +9,8 @@ import flixel.util.FlxColor;
 import objects.GameSprite;
 import objects.GameSprite.GameText;
 import flixel.tweens.FlxEase;
+import data.WindowsData;
+
 class Title extends MusicBeatState
 {
     var redBox:FlxSprite;
@@ -85,6 +87,19 @@ class Title extends MusicBeatState
         introSkipped = true;
         var white:FlxSprite = new FlxSprite().makeGraphic(FlxG.width,FlxG.height);
         add(white);
+
+        FlxG.sound.soundTrayEnabled = true;
+        #if cpp
+        if(ClientPrefs.windowColor != 'WHITE')
+		    WindowsData.setWindowColorMode(DARK);
+		#end
+
+        #if !mobile
+        if(Main.fpsVar != null) {
+			Main.fpsVar.visible = ClientPrefs.showFPS;
+		}
+        #end
+
         FlxTween.tween(white, {alpha: 0}, 0.75, {ease: FlxEase.linear, onComplete: function(twn:FlxTween){
             remove(white);
             selectedSMTH = false;

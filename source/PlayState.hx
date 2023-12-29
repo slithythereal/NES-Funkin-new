@@ -278,6 +278,7 @@ class PlayState extends MusicBeatState
 	var stageGrp:FlxTypedGroup<BGSprite>;
 	var glitchShader:GLITCHshader;
 	var chromaticShader:CHROMATICshader;
+	var vhsShader:VHSshader;
 
 	override public function create()
 	{
@@ -486,7 +487,7 @@ class PlayState extends MusicBeatState
 				stageGrp.add(fire);
 								
 				var mountains:BGSprite = new BGSprite('GodzillaRed/Mountains', -200, -300, 1, 1);
-				mountains.scale.set(0.9, 0.9); //could've used `updateHitbox()` but don't have a need for it so 🫠
+				mountains.scale.set(0.9, 0.9); 
 				mountains.antialiasing = false;
 				stageGrp.add(mountains);
 
@@ -498,6 +499,7 @@ class PlayState extends MusicBeatState
 				if(gameATTRIBUTES['isShaderOn']){
 					glitchShader = new GLITCHshader();
 					chromaticShader = new CHROMATICshader(0.001);
+					vhsShader = new VHSshader();
 					var filterArray:Array<BitmapFilter> = [new ShaderFilter(glitchShader), new ShaderFilter(chromaticShader)];
 					camGame.setFilters(filterArray);
 					camHUD.setFilters(filterArray);
@@ -1937,6 +1939,7 @@ class PlayState extends MusicBeatState
 				health -= (runTxt.healthDrainVar * elapsed);
 				if(gameATTRIBUTES['isShaderOn']){
 					glitchShader.update(elapsed * 3);
+					vhsShader.update(elapsed);
 				}
 				
 			}

@@ -40,12 +40,9 @@ class Init extends MusicBeatState {
     	FlxG.save.bind('funkin', 'ninjamuffin99');
 		ClientPrefs.loadPrefs();
 		Highscore.load();
-        
-        if(FlxG.save.data != null && FlxG.save.data.fullscreen)
-        {
-            FlxG.fullscreen = FlxG.save.data.fullscreen;
-            //trace('LOADED FULLSCREEN SETTING!!');
-        }
+
+		FlxG.fullscreen = ClientPrefs.isFullscreen;
+
         persistentUpdate = true;
         persistentDraw = true;
 

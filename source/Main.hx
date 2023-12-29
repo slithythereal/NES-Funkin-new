@@ -87,15 +87,17 @@ class Main extends Sprite
 		#if !mobile
 		fpsVar = new FPS(10, 3, 0xFFFFFF);
 		addChild(fpsVar);
+		if(fpsVar != null)
+			fpsVar.visible = false;
+
+		FlxG.sound.soundTrayEnabled = false;
+
 		Lib.current.stage.align = "tl";
 		Lib.current.stage.scaleMode = StageScaleMode.NO_SCALE;
-		if(fpsVar != null) {
-			fpsVar.visible = ClientPrefs.showFPS;
-		}
 		#end
+		FlxG.autoPause = false;
 
 		#if html5
-		FlxG.autoPause = false;
 		FlxG.mouse.visible = false;
 		#end
 		

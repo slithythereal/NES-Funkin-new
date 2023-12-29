@@ -24,6 +24,7 @@ import flixel.util.FlxTimer;
 import flixel.input.keyboard.FlxKey;
 import flixel.graphics.FlxGraphic;
 import Controls;
+import data.WindowsData;
 
 using StringTools;
 
@@ -48,6 +49,35 @@ class NESFunkinSettingsSubState extends BaseOptionsMenu
 		true);
 		addOption(option);
 
+		var option:Option = new Option('Fullscreen', 
+		'Fullscreen option bc I felt like it -slithy\nalso it might not work the first time',
+		'isFullscreen',
+		'bool',
+		false);
+		addOption(option);
+		option.onChange = onChangeFullscreen;
+
+		#if cpp
+		var option:Option = new Option('Window Color', 
+		'The color of the window, really cool effect!',
+		'windowColor', 
+		'string',
+		'DARK',
+		['DARK', 'LIGHT']);
+		addOption(option);
+		option.onChange = onChangeWindowColor;
+		#end
 		super();
+	}
+	function onChangeFullscreen(){
+		FlxG.fullscreen = !FlxG.fullscreen;
+	}
+	function onChangeWindowColor(){
+		#if cpp
+		if(ClientPrefs.windowColor == 'DARK')
+			WindowsData.setWindowColorMode(DARK);
+		else 
+			WindowsData.setWindowColorMode(LIGHT);
+		#end
 	}
 }
