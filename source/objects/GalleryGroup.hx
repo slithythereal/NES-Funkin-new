@@ -32,7 +32,6 @@ class GalleryGroup extends FlxSpriteGroup
         gallery.scale.set(1.25, 1.25);
         gallery.updateHitbox();
         add(gallery);
-        CommandData.watch(gallery);
 
         if(!whiteflashGone){
             whiteFlash = new FlxSprite().makeGraphic(FlxG.width, FlxG.height);

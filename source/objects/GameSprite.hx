@@ -15,9 +15,9 @@ class GameSprite extends FlxSprite
 	// stolen from @sugarcoatedOwO on twitter :troll:
 	public var _dynamic:Dynamic = {};
 
-	public function new(?X:Float = 0, ?Y:Float = 0, ?SimpleGraphic:FlxGraphicAsset)
+	public function new(?X:Float = 0, ?Y:Float = 0)
 	{
-		super(X, Y, SimpleGraphic);
+		super(X, Y);
 	}
 
 	override public function update(elapsed:Float):Void
@@ -27,6 +27,11 @@ class GameSprite extends FlxSprite
 		{
 			_dynamic.update(elapsed);
 		}
+	}
+	public function setScale(width:Float, height:Float)
+	{
+		scale.set(width, height);
+		updateHitbox();
 	}
 }
 class GameText extends FlxText

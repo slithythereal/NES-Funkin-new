@@ -27,7 +27,7 @@ class MenuState extends MusicBeatState {
 
 	var codes:Array<String> = [
 		'november'
-	];
+    ];
 	var codesBuffer:String = ''; //titlestate code lol
 	var allowedKeys:String = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
@@ -99,7 +99,7 @@ class MenuState extends MusicBeatState {
                         if (codesBuffer.contains(word)){
                             //function
                             trace("yuhhhhhhh");
-                            FlxG.openURL('https://youtube.com/playlist?list=PLg5pkob-JRkbkoT5yiKOzdj_LEiQYQW2H&si=vRTtNXPTAzxhPF5D');
+                            coolFunc(word);
     
                             codesBuffer = '';
                             break;
@@ -115,10 +115,12 @@ class MenuState extends MusicBeatState {
         galleryGrp.setGalleryX();
         switch(daFunc)
         {
+            case 'NOVEMBER':
+                FlxG.openURL('https://youtube.com/playlist?list=PLg5pkob-JRkbkoT5yiKOzdj_LEiQYQW2H&si=vRTtNXPTAzxhPF5D');
+
             case 'play':
                 selectedSMTH = true;
                 WeekData.reloadWeekFiles(true);
-                FreeplayState.destroyFreeplayVocals();
                 PlayState.isStoryMode = true;
                 CoolUtil.difficulties = CoolUtil.defaultDifficulties.copy();
                 PlayState.storyDifficulty = 1;
@@ -131,12 +133,12 @@ class MenuState extends MusicBeatState {
                 LoadingState.loadAndSwitchState(new PlayState(), true);
             case 'exit':
                 Sys.exit(1);
-            /*
+            
             case 'credits':
                 FlxTransitionableState.skipNextTransIn = true;
                 FlxTransitionableState.skipNextTransOut = true;
                 MusicBeatState.switchState(new Credits());
-            */
+            
             case 'settings':
                 FlxTransitionableState.skipNextTransIn = true;
                 FlxTransitionableState.skipNextTransOut = true;
@@ -156,4 +158,5 @@ class MenuState extends MusicBeatState {
 
         daSquare.y = squarePos[curOptSelected];
     }
+
 }

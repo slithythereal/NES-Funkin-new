@@ -12,8 +12,11 @@ decorate UI a little bit - FINISHED
 
 redo options and credits menu - (WORKING ON)
 fix RUN mechanic - (WORKING ON)
+add credits menu - (WORKING ON)
 
-add credits menu - UNFINISHED
+add shaders to UI - UNFINISHED
+fix music loops - UNFINISHED
+transform StoryMenuState.hx into StoryModeData.hx - UNFINISHED
 redo end transition code for title - UNFINISHED
 remove unnecessary features - UNFINISHED
 remove unnecessary assets - UNFINISHED

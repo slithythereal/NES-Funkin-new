@@ -26,6 +26,7 @@ import flixel.util.FlxTimer;
 import flixel.input.keyboard.FlxKey;
 import flixel.graphics.FlxGraphic;
 import Controls;
+import objects.DescBox;
 
 using StringTools;
 
@@ -39,8 +40,8 @@ class BaseOptionsMenu extends MusicBeatSubstate
 	private var grpTexts:FlxTypedGroup<AttachedText>;
 
 	private var boyfriend:Character = null;
-	private var descBox:FlxSprite;
-	private var descText:FlxText;
+
+	private var descBox:DescBox;
 
 	public var title:String;
 	public var rpcTitle:String;
@@ -78,11 +79,6 @@ class BaseOptionsMenu extends MusicBeatSubstate
 		grpTexts = new FlxTypedGroup<AttachedText>();
 		add(grpTexts);
 
-		descBox = new FlxSprite().makeGraphic(1, 1, FlxColor.BLACK);
-		descBox.alpha = 0.6;
-		descBox.visible = false;
-		add(descBox);
-		
 		var titleText:FlxText = new FlxText(25, 40, 0, title);
 		titleText.setFormat(Paths.font("Pixel_NES.otf"), 30, FlxColor.WHITE, CENTER);
 		titleText.alpha = 0.4;  
@@ -93,12 +89,8 @@ class BaseOptionsMenu extends MusicBeatSubstate
 		descInfo.alpha = 0.2;
 		add(descInfo);
 
-		descText = new FlxText(50, 600, 1180, "", 32);
-		descText.setFormat(Paths.font("Pixel_NES.otf"), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-		descText.scrollFactor.set();
-		descText.borderSize = 2.4;
-		descText.visible = false;
-		add(descText);
+		descBox = new DescBox(false);
+		add(descBox);
 
 		for (i in 0...optionsArray.length)
 		{
@@ -150,8 +142,7 @@ class BaseOptionsMenu extends MusicBeatSubstate
 		if (controls.BACK) 
 			close();
 
-		if(FlxG.keys.justPressed.TAB)
-			toggleDescText();
+
 
 
 		if(nextAccept <= 0)
@@ -286,13 +277,7 @@ class BaseOptionsMenu extends MusicBeatSubstate
 		if (curSelected >= optionsArray.length)
 			curSelected = 0;
 
-		descText.text = optionsArray[curSelected].description;
-		descText.screenCenter(Y);
-		descText.y += 270;
-
-		descBox.setPosition(descText.x - 10, descText.y - 10);
-		descBox.setGraphicSize(Std.int(descText.width + 20), Std.int(descText.height + 25));
-		descBox.updateHitbox();
+		descBox.changeDescText(optionsArray[curSelected].description, 270);
 
         daSquare.y = squarePos[curSelected];
 
@@ -303,11 +288,6 @@ class BaseOptionsMenu extends MusicBeatSubstate
 		curOption = optionsArray[curSelected]; 
 	}
 
-	function toggleDescText()
-	{
-		descText.visible = !descText.visible;
-		descBox.visible = !descBox.visible;
-	}
 	public function reloadBoyfriend()
 	{
 		var wasVisible:Bool = false;

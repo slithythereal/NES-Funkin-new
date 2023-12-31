@@ -37,7 +37,7 @@ class OptionsState extends MusicBeatState
 	private static var curSelected:Int = 0;
     
 	//square
-	var squareMulti:Float = 1;
+	var squareMulti:Float = 25;
 	var daSquare:FlxSprite;
     var squarePos:Array<Float> = [];
 
@@ -110,19 +110,19 @@ class OptionsState extends MusicBeatState
 
 	override function openSubState(SubState:FlxSubState){
 		isInSubState = true;
-		daSquare.alpha = 0;
-		grpOptions.forEach(function(txt:GameText) {
-			txt.alpha = 0;
-		});
+		daSquare.visible = false;
+		for (text in grpOptions) {
+			text.visible = false;
+		}
 		super.openSubState(SubState);
 	}
 
 	override function closeSubState() {
 		isInSubState = false;
-		daSquare.alpha = 1;
-		grpOptions.forEach(function(txt:GameText) {
-			txt.alpha = 1;
-		});
+		daSquare.visible = true;
+		for (text in grpOptions) {
+			text.visible = true;
+		}
 		super.closeSubState();
 		ClientPrefs.saveSettings();
 	}
