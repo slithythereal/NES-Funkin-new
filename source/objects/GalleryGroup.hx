@@ -13,10 +13,10 @@ class GalleryGroup extends FlxSpriteGroup
 {
     private static var isGalleryShowing:Bool = false;
     private static var galleryX:Float = 0;
+    private static var whiteflashGone:Bool = false;
     
     var gallery:FlxBackdrop;
     var whiteFlash:FlxSprite;
-    private static var whiteflashGone:Bool = false;
     
     public function new() { 
         super();
@@ -35,7 +35,7 @@ class GalleryGroup extends FlxSpriteGroup
 
         if(!whiteflashGone){
             whiteFlash = new FlxSprite().makeGraphic(FlxG.width, FlxG.height);
-            whiteFlash.alpha = 0;
+            whiteFlash.alpha = 1;
             whiteFlash.visible = false;
             add(whiteFlash);
         }
@@ -48,12 +48,12 @@ class GalleryGroup extends FlxSpriteGroup
         {
             isGalleryShowing = true;
             gallery.visible = true;
-            whiteFlash.alpha = 1;
             whiteFlash.visible = true;
             FlxTween.tween(gallery, {alpha: 0.25}, 0.5, {ease: FlxEase.sineIn});
             FlxTween.tween(whiteFlash, {alpha: 0}, 1.5, {ease: FlxEase.linear, onComplete: function(twn:FlxTween){
+                whiteFlash.visible = false;
                 whiteflashGone = true;
-            }});     
+            }});
         }
     }
     public function setGalleryX()

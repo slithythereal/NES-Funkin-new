@@ -95,9 +95,9 @@ class Main extends Sprite
 		Lib.current.stage.align = "tl";
 		Lib.current.stage.scaleMode = StageScaleMode.NO_SCALE;
 		#end
-		FlxG.autoPause = false;
 
 		#if html5
+		FlxG.autoPause = false;
 		FlxG.mouse.visible = false;
 		#end
 		

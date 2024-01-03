@@ -16,6 +16,7 @@ import flixel.util.FlxColor;
 import lime.utils.Assets;
 import flixel.FlxSubState;
 import flash.text.TextField;
+import objects.Square;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.util.FlxSave;
@@ -35,12 +36,7 @@ class OptionsState extends MusicBeatState
 	public var options:Array<String> = ['NES Funkin', 'Controls', 'Adjust Delay and Combo', 'Graphics', 'Visuals and UI', 'Gameplay', 'back'];
 	private var grpOptions:FlxTypedGroup<GameText>;
 	private static var curSelected:Int = 0;
-    
-	//square
-	var squareMulti:Float = 25;
-	var daSquare:FlxSprite;
-    var squarePos:Array<Float> = [];
-
+	var daSquare:Square;
 	var galleryGrp:GalleryGroup;
 	var isInSubState:Bool = false;
 
@@ -81,14 +77,12 @@ class OptionsState extends MusicBeatState
 		grpOptions = new FlxTypedGroup<GameText>();
 		add(grpOptions);
 
-        daSquare = new FlxSprite(485, squareMulti);
-        daSquare.makeGraphic(35, 35, 0xFFFF0000);
+        daSquare = new Square(485, 150);
         add(daSquare);
-        CommandData.watch(daSquare);
-
+		
 		for (i in 0...options.length)
 		{
-			var offset:Float = squareMulti + (i * (115/2));
+			var offset:Float = daSquare.squareMulti + (i * (115/2));
 			var optionsTxt:GameText = new GameText(526);
             optionsTxt.setFormat(Paths.font("Pixel_NES.otf"), 40, FlxColor.WHITE, CENTER);
             optionsTxt.text = options[i];
@@ -99,7 +93,7 @@ class OptionsState extends MusicBeatState
 			optionsTxt.ID = i;
             grpOptions.add(optionsTxt);   
             optionsTxt.updateHitbox();
-            squarePos.push(offset + 10);
+			daSquare.pushSquarePos(offset + 10);
 		}
 	
 		changeItem();
@@ -148,6 +142,6 @@ class OptionsState extends MusicBeatState
 			curSelected = options.length - 1;
 		if (curSelected >= options.length)
 			curSelected = 0;
-        daSquare.y = squarePos[curSelected];
+		daSquare.changeY(curSelected);
 	}
 }

@@ -7,6 +7,9 @@ import flixel.graphics.FlxGraphic;
 import Controls;
 
 class ClientPrefs {
+	#if !html5
+	public static var isAutoPauseOn:Bool = false;
+	#end
 	#if cpp
 	public static var windowColor:String = 'DARK';
 	#end
@@ -99,6 +102,9 @@ class ClientPrefs {
 	}
 
 	public static function saveSettings() {
+		#if !html5
+		FlxG.save.data.isAutoPauseOn = isAutoPauseOn;
+		#end
 		#if cpp
 		FlxG.save.data.windowColor = windowColor;
 		#end
@@ -149,6 +155,10 @@ class ClientPrefs {
 	}
 
 	public static function loadPrefs() { //worst code ever written im so glad this was fixed in later psych updates
+		#if !html5
+		if(FlxG.save.data.isAutoPauseOn != null)
+			isAutoPauseOn = FlxG.save.data.isAutoPauseOn;
+		#end
 		#if cpp
 		if(FlxG.save.data.windowColor != null)
 			windowColor = FlxG.save.data.windowColor;

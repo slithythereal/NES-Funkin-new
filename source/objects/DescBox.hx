@@ -6,18 +6,28 @@ import objects.GameSprite;
 import flixel.FlxG;
 import flixel.util.FlxColor;
 import flixel.text.FlxText.FlxTextBorderStyle;
+import flixel.text.FlxText;
 
+//look idk how descbox.hx ended up looking like this, it must've been some kinda accident 💀 -slithy
 class DescBox extends FlxGroup
 {
     var descBox:GameSprite;
     var descTxt:GameText;
     public var descBoxVisible:Bool = false;
 
-    public function new(?boxVisible:Bool = false)
+    public function new(?boxVisible:Bool = false, title:String)
     {
         super();
 
         descBoxVisible = boxVisible;
+
+        var titleText:TitleText = new TitleText(title);
+        add(titleText);
+        
+        var descInfo:FlxText = new FlxText(25, 80, 0,  'PRESS [TAB] TO TOGGLE DESCRIPTION');
+        descInfo.setFormat(Paths.font("Pixel_NES.otf"), 15, FlxColor.WHITE, CENTER);
+        descInfo.alpha = 0.2;
+        add(descInfo);
 
         descBox = new GameSprite();
         descBox.makeGraphic(1, 1, FlxColor.BLACK);
@@ -54,4 +64,13 @@ class DescBox extends FlxGroup
       descTxt.visible = !descTxt.visible;
       descBox.visible = !descBox.visible;
     }
+}
+class TitleText extends FlxGroup { //lazy fr -slithy
+  public function new(title:String){
+    super();
+    var titleText:FlxText = new FlxText(25, 40, 0, title);
+    titleText.setFormat(Paths.font("Pixel_NES.otf"), 30, FlxColor.WHITE, CENTER);
+    titleText.alpha = 0.4;  
+    add(titleText);
+  }
 }

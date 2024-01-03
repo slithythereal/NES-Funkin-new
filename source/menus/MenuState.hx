@@ -26,19 +26,16 @@ class MenuState extends MusicBeatState {
     private var optionGrp:FlxTypedGroup<FlxText>;
 
 	var codes:Array<String> = [
-		'november'
+		'november', 
+        'beta',
+        'banbuds'
     ];
 	var codesBuffer:String = ''; //titlestate code lol
 	var allowedKeys:String = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
     var daSquare:Square;
-    var squarePos:Array<Float> = [];
-    var squareMulti:Float = 190;
-    
     var selectedSMTH:Bool = false;
     var galleryGrp:GalleryGroup;
  
-    
     override function create() {
         #if desktop
 		DiscordClient.changePresence("Main Menu", null);
@@ -50,12 +47,12 @@ class MenuState extends MusicBeatState {
         optionGrp = new FlxTypedGroup<FlxText>();
         add(optionGrp);
 
-        daSquare = new Square(485, squareMulti);
+        daSquare = new Square(485, 190);
         add(daSquare);
 
         for(i in 0...optionsArray.length)
         {
-            var offset:Float = squareMulti + (i * 115);
+            var offset:Float = daSquare.squareMulti + (i * 115);
             var optionsTxt:FlxText = new FlxText(526, offset);
             optionsTxt.setFormat(Paths.font("Pixel_NES.otf"), 40, FlxColor.WHITE, CENTER);
             optionsTxt.text = optionsArray[i];
@@ -64,7 +61,7 @@ class MenuState extends MusicBeatState {
             optionsTxt.ID = i;
             optionGrp.add(optionsTxt);   
             optionsTxt.updateHitbox();
-            squarePos.push(offset + 10);
+            daSquare.pushSquarePos(offset + 10);
         }
 
         changeItem(0);
@@ -115,6 +112,10 @@ class MenuState extends MusicBeatState {
         galleryGrp.setGalleryX();
         switch(daFunc)
         {
+            case 'BANBUDS':
+                FlxG.openURL('https://twitter.com/Banbuds/status/1492381201620951042');
+            case 'BETA':
+                FlxG.openURL('https://twitter.com/SieniorGargoyle/status/1483919914285031434');
             case 'NOVEMBER':
                 FlxG.openURL('https://youtube.com/playlist?list=PLg5pkob-JRkbkoT5yiKOzdj_LEiQYQW2H&si=vRTtNXPTAzxhPF5D');
 
@@ -156,7 +157,7 @@ class MenuState extends MusicBeatState {
         if(curOptSelected < 0)
             curOptSelected = optionsArray.length - 1;
 
-        daSquare.y = squarePos[curOptSelected];
+        daSquare.changeY(curOptSelected);
     }
 
 }

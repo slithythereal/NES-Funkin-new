@@ -20,9 +20,10 @@ import flixel.util.FlxSave;
 import haxe.Json;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
-import objects.TEMPbg;
 import flixel.util.FlxTimer;
 import flixel.input.keyboard.FlxKey;
+import objects.ControlsTxt;
+import objects.ControlsTxt.MoreControlsTxt;
 import flixel.graphics.FlxGraphic;
 import Controls;
 
@@ -63,19 +64,16 @@ class ControlsSubState extends MusicBeatSubstate {
 		['Key 2', 'debug_2']
 	];
 
-	private var grpOptions:FlxTypedGroup<Alphabet>;
-	private var grpInputs:Array<AttachedText> = [];
-	private var grpInputsAlt:Array<AttachedText> = [];
+	private var grpOptions:FlxTypedGroup<ControlsTxt>;
+	private var grpInputs:Array<MoreControlsTxt> = [];
+	private var grpInputsAlt:Array<MoreControlsTxt> = [];
 	var rebindingKey:Bool = false;
 	var nextAccept:Int = 5;
 
 	public function new() {
 		super();
 
-		var tempBg:TEMPbg = new TEMPbg();
-		add(tempBg);
-
-		grpOptions = new FlxTypedGroup<Alphabet>();
+		grpOptions = new FlxTypedGroup<ControlsTxt>();
 		add(grpOptions);
 
 		optionShit.push(['']);
@@ -88,8 +86,7 @@ class ControlsSubState extends MusicBeatSubstate {
 				isCentered = true;
 			}
 
-			var optionText:Alphabet = new Alphabet(0, (10 * i), optionShit[i][0], (!isCentered || isDefaultKey), false);
-			optionText.isMenuItem = true;
+			var optionText:ControlsTxt = new ControlsTxt(0, (10 * i), optionShit[i][0], (!isCentered || isDefaultKey), false);
 			if(isCentered) {
 				optionText.screenCenter(X);
 				optionText.forceX = optionText.x;
@@ -127,7 +124,6 @@ class ControlsSubState extends MusicBeatSubstate {
 			if (controls.BACK) {
 				ClientPrefs.reloadControls();
 				close();
-				FlxG.sound.play(Paths.sound('cancelMenu'));
 			}
 
 			if(controls.ACCEPT && nextAccept <= 0) {
@@ -135,7 +131,6 @@ class ControlsSubState extends MusicBeatSubstate {
 					ClientPrefs.keyBinds = ClientPrefs.defaultKeys.copy();
 					reloadKeys();
 					changeSelection();
-					FlxG.sound.play(Paths.sound('confirmMenu'));
 				} else if(!unselectableCheck(curSelected)) {
 					bindingTime = 0;
 					rebindingKey = true;
@@ -144,7 +139,6 @@ class ControlsSubState extends MusicBeatSubstate {
 					} else {
 						grpInputs[getInputTextNum()].alpha = 0;
 					}
-					FlxG.sound.play(Paths.sound('scrollMenu'));
 				}
 			}
 		} else {
@@ -160,7 +154,6 @@ class ControlsSubState extends MusicBeatSubstate {
 				ClientPrefs.keyBinds.set(optionShit[curSelected][1], keysArray);
 
 				reloadKeys();
-				FlxG.sound.play(Paths.sound('confirmMenu'));
 				rebindingKey = false;
 			}
 
@@ -171,7 +164,6 @@ class ControlsSubState extends MusicBeatSubstate {
 				} else {
 					grpInputs[curSelected].alpha = 1;
 				}
-				FlxG.sound.play(Paths.sound('scrollMenu'));
 				rebindingKey = false;
 				bindingTime = 0;
 			}
@@ -217,6 +209,7 @@ class ControlsSubState extends MusicBeatSubstate {
 
 			if(!unselectableCheck(bullShit-1)) {
 				item.alpha = 0.6;
+
 				if (item.targetY == 0) {
 					item.alpha = 1;
 					if(curAlt) {
@@ -237,7 +230,6 @@ class ControlsSubState extends MusicBeatSubstate {
 				}
 			}
 		}
-		FlxG.sound.play(Paths.sound('scrollMenu'));
 	}
 
 	function changeAlt() {
@@ -260,7 +252,6 @@ class ControlsSubState extends MusicBeatSubstate {
 				break;
 			}
 		}
-		FlxG.sound.play(Paths.sound('scrollMenu'));
 	}
 
 	private function unselectableCheck(num:Int, ?checkDefaultKey:Bool = false):Bool {
@@ -270,16 +261,14 @@ class ControlsSubState extends MusicBeatSubstate {
 		return optionShit[num].length < 2 && optionShit[num][0] != defaultKey;
 	}
 
-	private function addBindTexts(optionText:Alphabet, num:Int) {
+	private function addBindTexts(optionText:ControlsTxt, num:Int) {
 		var keys:Array<Dynamic> = ClientPrefs.keyBinds.get(optionShit[num][1]);
-		var text1 = new AttachedText(InputFormatter.getKeyName(keys[0]), 400, -55);
-		text1.setPosition(optionText.x + 400, optionText.y - 55);
+		var text1 = new MoreControlsTxt(InputFormatter.getKeyName(keys[0]), 400, -5);
 		text1.sprTracker = optionText;
 		grpInputs.push(text1);
 		add(text1);
 
-		var text2 = new AttachedText(InputFormatter.getKeyName(keys[1]), 650, -55);
-		text2.setPosition(optionText.x + 650, optionText.y - 55);
+		var text2 = new MoreControlsTxt(InputFormatter.getKeyName(keys[1]), 700, -5);
 		text2.sprTracker = optionText;
 		grpInputsAlt.push(text2);
 		add(text2);
@@ -287,13 +276,13 @@ class ControlsSubState extends MusicBeatSubstate {
 
 	function reloadKeys() {
 		while(grpInputs.length > 0) {
-			var item:AttachedText = grpInputs[0];
+			var item:MoreControlsTxt = grpInputs[0];
 			item.kill();
 			grpInputs.remove(item);
 			item.destroy();
 		}
 		while(grpInputsAlt.length > 0) {
-			var item:AttachedText = grpInputsAlt[0];
+			var item:MoreControlsTxt = grpInputsAlt[0];
 			item.kill();
 			grpInputsAlt.remove(item);
 			item.destroy();
@@ -326,7 +315,7 @@ class ControlsSubState extends MusicBeatSubstate {
 					item.alpha = 1;
 					if(curAlt) {
 						for (i in 0...grpInputsAlt.length) {
-							if(grpInputsAlt[i].sprTracker == item) {
+							if(grpInputsAlt[i ].sprTracker == item) {
 								grpInputsAlt[i].alpha = 1;
 							}
 						}

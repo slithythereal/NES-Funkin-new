@@ -67,6 +67,17 @@ class NESFunkinSettingsSubState extends BaseOptionsMenu
 		addOption(option);
 		option.onChange = onChangeWindowColor;
 		#end
+
+		#if !html5
+		var option:Option = new Option('Auto Pause',
+		'FNF mods normally have a "auto pause" mechanic where if you back out of a window, the game automatically pauses. \nThis option turns it on or off!',
+		'isAutoPauseOn',
+		'bool',
+		false);
+		addOption(option);
+		option.onChange = onChangeFocusLost;
+		#end
+
 		super();
 	}
 	function onChangeFullscreen(){
@@ -78,6 +89,11 @@ class NESFunkinSettingsSubState extends BaseOptionsMenu
 			WindowsData.setWindowColorMode(DARK);
 		else 
 			WindowsData.setWindowColorMode(LIGHT);
+		#end
+	}
+	function onChangeFocusLost(){
+		#if !html5
+		FlxG.autoPause = !FlxG.autoPause;
 		#end
 	}
 }

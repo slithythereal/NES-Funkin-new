@@ -10,16 +10,19 @@ redo pause menu - FINISHED
 port lua code to base game - FINISHED
 decorate UI a little bit - FINISHED
 
-redo options and credits menu - (WORKING ON)
+redo options and credits menu - (FINISHING UP)
 fix RUN mechanic - (WORKING ON)
-add credits menu - (WORKING ON)
+add credits menu - (FINISHING UP)
+work on special thanks credits - (WORKING ON)
 
 add shaders to UI - UNFINISHED
 fix music loops - UNFINISHED
-transform StoryMenuState.hx into StoryModeData.hx - UNFINISHED
-redo end transition code for title - UNFINISHED
 remove unnecessary features - UNFINISHED
 remove unnecessary assets - UNFINISHED
-remove mod folder - UNFINISHED
-remove lua - UNFINISHED
+
+--hopefully--
 add hmm support (hopefully) - UNFINISHED
+remove lua - UNFINISHED
+remove mod folder - UNFINISHED
+transform StoryMenuState.hx into StoryModeData.hx - UNFINISHED
+redo end transition code for title - UNFINISHED

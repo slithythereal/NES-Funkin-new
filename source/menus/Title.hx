@@ -94,6 +94,10 @@ class Title extends MusicBeatState
 		    WindowsData.setWindowColorMode(DARK);
 		#end
 
+        #if !html5
+		FlxG.autoPause = ClientPrefs.isAutoPauseOn;
+		#end
+
         #if !mobile
         if(Main.fpsVar != null) {
 			Main.fpsVar.visible = ClientPrefs.showFPS;

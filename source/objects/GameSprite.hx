@@ -9,11 +9,10 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 
-
+//custom FlxSprite class made by me (slithy), mainly just the normal flxsprite class but with some added functions
 class GameSprite extends FlxSprite
 {
-	// stolen from @sugarcoatedOwO on twitter :troll:
-	public var _dynamic:Dynamic = {};
+	public var _dynamic:Dynamic = {}; // stolen from @sugarcoatedOwO on twitter :troll:
 
 	public function new(?X:Float = 0, ?Y:Float = 0)
 	{
@@ -34,6 +33,8 @@ class GameSprite extends FlxSprite
 		updateHitbox();
 	}
 }
+
+//made one for flxtext as well
 class GameText extends FlxText
 {
 	public var _dynamic:Dynamic = {};

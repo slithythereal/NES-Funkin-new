@@ -1,5 +1,6 @@
 package options;
 
+import objects.Square;
 import objects.GameSprite.GameText;
 #if desktop
 import Discord.DiscordClient;
@@ -14,7 +15,6 @@ import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import lime.utils.Assets;
 import flixel.FlxSubState;
-import objects.TEMPbg;
 import flash.text.TextField;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -48,9 +48,7 @@ class BaseOptionsMenu extends MusicBeatSubstate
 
 	public var squareY:String;
 	private var squareMulti:Float = 190; //y offset var (i think)
-	private var daSquare:FlxSprite;
-    private var squarePos:Array<Float> = [];
-
+	private var daSquare:Square;
 
 	public function new()
 	{
@@ -71,30 +69,18 @@ class BaseOptionsMenu extends MusicBeatSubstate
 		grpOptions = new FlxTypedGroup<GameText>();
 		add(grpOptions);
 
-		daSquare = new FlxSprite(485, squareMulti);
-        daSquare.makeGraphic(35, 35, 0xFFFF0000);
+		daSquare = new Square(485, squareMulti);
         add(daSquare);
-        CommandData.watch(daSquare);
 
 		grpTexts = new FlxTypedGroup<AttachedText>();
 		add(grpTexts);
 
-		var titleText:FlxText = new FlxText(25, 40, 0, title);
-		titleText.setFormat(Paths.font("Pixel_NES.otf"), 30, FlxColor.WHITE, CENTER);
-		titleText.alpha = 0.4;  
-		add(titleText);
-		
-		var descInfo:FlxText = new FlxText(25, 80, 0,  'PRESS [TAB] TO TOGGLE DESCRIPTION');
-		descInfo.setFormat(Paths.font("Pixel_NES.otf"), 15, FlxColor.WHITE, CENTER);
-		descInfo.alpha = 0.2;
-		add(descInfo);
-
-		descBox = new DescBox(false);
+		descBox = new DescBox(false, title);
 		add(descBox);
 
 		for (i in 0...optionsArray.length)
 		{
-			var offset:Float = squareMulti + (i * (115/2));
+			var offset:Float = daSquare.squareMulti + (i * (115/2));
 			var daText:String;
 			if(optionsArray[i].type == 'percent')
 				daText = optionsArray[i].name + ': ' + (optionsArray[i].getValue() * 100) + '%';
@@ -111,7 +97,7 @@ class BaseOptionsMenu extends MusicBeatSubstate
 			grpOptions.add(optionsTxt);
 			CommandData.watch(optionsTxt);
 
-            squarePos.push(offset + 7);
+			daSquare.pushSquarePos(offset + 7);
 
 			if(optionsArray[i].showBoyfriend && boyfriend == null)
 				reloadBoyfriend();
@@ -141,9 +127,6 @@ class BaseOptionsMenu extends MusicBeatSubstate
 
 		if (controls.BACK) 
 			close();
-
-
-
 
 		if(nextAccept <= 0)
 		{
@@ -279,7 +262,7 @@ class BaseOptionsMenu extends MusicBeatSubstate
 
 		descBox.changeDescText(optionsArray[curSelected].description, 270);
 
-        daSquare.y = squarePos[curSelected];
+		daSquare.changeY(curSelected);
 
 		if(boyfriend != null)
 		{
