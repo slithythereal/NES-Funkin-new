@@ -64,7 +64,6 @@ class GameOverSubstate extends MusicBeatSubstate
 				trace("updates cam");
 		}
 		add(boyfriend);
-		CommandData.watch(boyfriend);
 
 		camFollow = new FlxPoint(boyfriend.getGraphicMidpoint().x, boyfriend.getGraphicMidpoint().y);
 
@@ -94,9 +93,7 @@ class GameOverSubstate extends MusicBeatSubstate
 		}
 
 		if (controls.ACCEPT)
-		{
 			endBullshit();
-		}
 
 		/*
 		if (controls.BACK)

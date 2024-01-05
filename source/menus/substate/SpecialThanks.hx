@@ -18,6 +18,11 @@ class SpecialThanks extends MusicBeatSubstate
         ['Ne_Eo', 'previous coder for the mod (when it was in the first stages of development)', 'https://twitter.com/Ne_Eo_Twitch'],
         ['Lunarcleint', 'code help (mainly with shaders)', 'https://www.twitter.com/lunarcleint'],
         ['HowToAvenge101', 'music help', 'https://twitter.com/howtoavenge101'],
+        [
+            'Shadertoy.com', 
+            'shaders', 
+            'https://www.shadertoy.com'
+        ],
         ['Shadow Mario', 'creator of Psych Engine', 'https://twitter.com/Shadow_Mario_'],
         ['Funkin Crew', 'developers of FNF', 'https://funkin.me'],
         ['CosbyDaf', 'creator of NES Godzilla Creepypasta', 'https://www.deviantart.com/cosbydaf']
@@ -33,7 +38,7 @@ class SpecialThanks extends MusicBeatSubstate
         textGrp = new FlxTypedGroup<GameText>();
         add(textGrp);
     
-        daSquare = new Square(500, 125);
+        daSquare = new Square(500, 75);
         add(daSquare);
 
         for(i in 0...specialThanksArray.length){

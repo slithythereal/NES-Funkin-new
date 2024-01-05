@@ -283,6 +283,10 @@ class PlayState extends MusicBeatState
 	//shaders
 	var glitchShader:GLITCHshader;
 	var chromaticShader:CHROMATICshader;
+	var camGameSHADERS:Array<BitmapFilter>;
+	var camHUDSHADERS:Array<BitmapFilter>;
+	var camOtherSHADERS:Array<BitmapFilter>;
+
 	public var shaderUpdates:Array<Float->Void> = [];
 
 	//stage stuff
@@ -503,15 +507,20 @@ class PlayState extends MusicBeatState
 				magma.antialiasing = false;
 				stageGrp.add(magma);
 				
-				if(gameATTRIBUTES['isShaderOn']){
+				if(gameATTRIBUTES['isShaderOn']){ //one day I'll redo the shader code, one day -slithy
 					trace('shaderOn');
 					glitchShader = new GLITCHshader();
 					chromaticShader = new CHROMATICshader(0.001);
 
-					var filterArray:Array<BitmapFilter> = [new ShaderFilter(glitchShader), new ShaderFilter(chromaticShader)];
-					camGame.setFilters(filterArray);
-					camHUD.setFilters(filterArray);
-					camOther.setFilters(filterArray);
+					camGameSHADERS = [new ShaderFilter(glitchShader), new ShaderFilter(chromaticShader)];
+					camHUDSHADERS = [new ShaderFilter(glitchShader), new ShaderFilter(chromaticShader)];
+					camOtherSHADERS = [new ShaderFilter(glitchShader), new ShaderFilter(chromaticShader)];
+
+					//FlxG.camera.setFilters(camGameSHADERS);
+					//var filterArray:Array<BitmapFilter> = [new ShaderFilter(glitchShader), new ShaderFilter(chromaticShader)];
+					camGame.setFilters(camGameSHADERS);
+					camHUD.setFilters(camHUDSHADERS);
+					camOther.setFilters(camOtherSHADERS);
 				}
 				
 				if(Paths.formatToSongPath(SONG.song).toLowerCase() == 'run'){
@@ -3270,7 +3279,7 @@ class PlayState extends MusicBeatState
 				if(runTxt.strike < runTxt.runArray.length)
 					runTxt.addStrike(1);
 				if(gameATTRIBUTES['isShaderOn']){
-					if(runTxt.strike <= 2){
+					if(runTxt.strike < runTxt.runArray.length){
 						daStatic.visible = true;
 						new FlxTimer().start(0.15, function(tmr:FlxTimer){
 							daStatic.visible = false;

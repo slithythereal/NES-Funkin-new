@@ -14,7 +14,7 @@ class CreditsSub extends MusicBeatSubstate
         ['Kit-_-', 'director/concept artist/sound design', 'https://twitter.com/Kitcoutski2002'],
         ['Sieggy', 'artist/animator', 'https://twitter.com/SieniorGargoyle/'],
         ['Zomboi', 'musician/sound design', 'https://twitter.com/_Zombeats'],
-        ['Slithy', 'programmer/finished the mod (kinda)', 'https://slithy.carrd.co']
+        ['Slithy', 'programmer', 'https://slithy.carrd.co']
     ];
     var portraitSprite:GameSprite;
     var credName:GameText;
