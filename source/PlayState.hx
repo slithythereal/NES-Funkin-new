@@ -272,16 +272,21 @@ class PlayState extends MusicBeatState
 	//mechs
 	public var curMECH:String = "";
 	var runTxt:RUNtxt;
+	var randoNum:Int = FlxG.random.int(5, 7);
+	public var daStatic:FlxSprite;
+
 	public var gameATTRIBUTES:Map<String, Dynamic> = [
 		'doesCamZoom' => true,
 		'isShaderOn' => false
 	];
 
-	//red stuff
-	var stageGrp:FlxTypedGroup<BGSprite>;
+	//shaders
 	var glitchShader:GLITCHshader;
 	var chromaticShader:CHROMATICshader;
-	var vhsShader:VHSshader;
+	public var shaderUpdates:Array<Float->Void> = [];
+
+	//stage stuff
+	var stageGrp:FlxTypedGroup<BGSprite>;
 
 	override public function create()
 	{
@@ -375,7 +380,7 @@ class PlayState extends MusicBeatState
 		// String that contains the mode defined here so it isn't necessary to call changePresence for each mode
 		//var otherstuff:String = WeekData.getCurrentWeek().weekName;
 
-		detailsText = "GODZILLA";
+		detailsText = "R U N";
 	
 		// String for when the game is paused
 		detailsPausedText = "Paused - " + detailsText;
@@ -475,8 +480,7 @@ class PlayState extends MusicBeatState
 				curMECH = 'run';
 				timeBarCOLORS = [0xFF000000, 0xFFff1000];
 				gameATTRIBUTES["doesCamZoom"] = false;
-				if(ClientPrefs.nesSHADERS)
-					gameATTRIBUTES['isShaderOn'] = true;
+				gameATTRIBUTES["isShaderOn"] = ClientPrefs.nesSHADERS;
 
 				var godzillabg:BGSprite = new BGSprite('GodzillaRed/Sky', -100, -100, 1, 1);
 				godzillabg.scale.set(0.9, 0.9);
@@ -500,16 +504,17 @@ class PlayState extends MusicBeatState
 				stageGrp.add(magma);
 				
 				if(gameATTRIBUTES['isShaderOn']){
+					trace('shaderOn');
 					glitchShader = new GLITCHshader();
 					chromaticShader = new CHROMATICshader(0.001);
-					vhsShader = new VHSshader();
+
 					var filterArray:Array<BitmapFilter> = [new ShaderFilter(glitchShader), new ShaderFilter(chromaticShader)];
 					camGame.setFilters(filterArray);
 					camHUD.setFilters(filterArray);
 					camOther.setFilters(filterArray);
 				}
 				
-				if(Paths.formatToSongPath(SONG.song) == 'godzilla'){
+				if(Paths.formatToSongPath(SONG.song).toLowerCase() == 'run'){
 					stageGrp.forEach(function(spr:BGSprite){
 						spr.alpha = 0.001;
 					});
@@ -555,7 +560,6 @@ class PlayState extends MusicBeatState
 			}
 		}
 		#end
-
 
 		// STAGE SCRIPTS
 		#if (MODS_ALLOWED && LUA_ALLOWED)
@@ -613,9 +617,7 @@ class PlayState extends MusicBeatState
 			if(gf != null)
 				gf.visible = false;
 		}
-
-	
-
+		
 		Conductor.songPosition = -5000;
 
 		strumLine = new FlxSprite(ClientPrefs.middleScroll ? STRUM_X_MIDDLESCROLL : STRUM_X, 50).makeGraphic(FlxG.width, 10);
@@ -826,6 +828,19 @@ class PlayState extends MusicBeatState
 			timeTxt.visible = false;
 			timeBar.visible = false;
 			timeBarBG.visible = false;
+		
+			if(gameATTRIBUTES["isShaderOn"]){
+				daStatic = new FlxSprite();
+				daStatic.frames = Paths.getSparrowAtlas('GodzillaRed/static');
+				daStatic.animation.addByPrefix('goofy', 'anim', 24, true);
+				daStatic.animation.play('goofy');
+				daStatic.scale.set(4, 4);
+				daStatic.updateHitbox();
+				daStatic.alpha = 0.75;
+				add(daStatic);	
+				daStatic.visible = false;
+				daStatic.cameras = [camOther];	
+			}
 		}
 
 		strumLineNotes.cameras = [camHUD];
@@ -1368,16 +1383,23 @@ class PlayState extends MusicBeatState
 		}
 	}
 
-	public function addBehindGF(obj:FlxObject)
-		insert(members.indexOf(gfGroup), obj);
-	
-	public function addBehindBF(obj:FlxObject)
-		insert(members.indexOf(boyfriendGroup), obj);
-	
-	public function addBehindDad (obj:FlxObject)
-		insert(members.indexOf(dadGroup), obj);
-	
 
+	public function addBehindGroup(obj:FlxObject, ?group:String = 'dad')
+	{
+		switch(group)
+		{
+			case 'bf':
+				insert(members.indexOf(boyfriendGroup), obj);
+			case 'gf':
+				insert(members.indexOf(gfGroup), obj);
+			case 'dad':
+				insert(members.indexOf(dadGroup), obj);
+			default:
+				trace(obj + "'s group doesn't exist");
+
+		}
+	}
+	
 	public function clearNotesBefore(time:Float)
 	{
 		var i:Int = unspawnNotes.length - 1;
@@ -1538,11 +1560,9 @@ class PlayState extends MusicBeatState
 
 		songName = Paths.formatToSongPath(SONG.song);
 		var file:String = Paths.json(songName + '/events');
-		#if MODS_ALLOWED
-		if (FileSystem.exists(Paths.modsJson(songName + '/events')) || FileSystem.exists(file)) {
-		#else
-		if (OpenFlAssets.exists(file)) {
-		#end
+		
+		if (#if MODS_ALLOWED FileSystem.exists(Paths.modsJson(songName + '/events')) || FileSystem.exists(file) #else (OpenFlAssets.exists(file)) #end) {
+
 			var eventsData:Array<Dynamic> = Song.loadFromJson('events', songName).events;
 			for (event in eventsData) //Event Notes
 			{
@@ -1919,13 +1939,11 @@ class PlayState extends MusicBeatState
 				health -= (runTxt.healthDrainVar * elapsed);
 				if(gameATTRIBUTES['isShaderOn']){
 					glitchShader.update(elapsed * 3);
-					vhsShader.update(elapsed);
 				}
-				
 			}
 		}
 
-		if (curSong.toLowerCase() == 'godzilla' && curStage == 'GodzillaRed' && curStep >= 80 && !twnDone)
+		if (curSong.toLowerCase() == 'run' && curStage == 'GodzillaRed' && curStep >= 80 && !twnDone)
 		{
 			twnDone = true;
 			stageGrp.forEach(function(spr:BGSprite){
@@ -2234,6 +2252,11 @@ class PlayState extends MusicBeatState
 		}
 		#end
 
+		if(gameATTRIBUTES["isShaderOn"] && shaderUpdates != null){
+			for(i in shaderUpdates)
+				i(elapsed);
+		}
+
 		setOnLuas('cameraX', camFollowPos.x);
 		setOnLuas('cameraY', camFollowPos.y);
 		setOnLuas('botPlay', cpuControlled);
@@ -2293,11 +2316,15 @@ class PlayState extends MusicBeatState
 					timer.active = true;
 				}
 
-				if(gameATTRIBUTES['isShaderOn'] && curMECH == 'run')
-				{
-					glitchShader.glitchAmount.value[0] = 0.0;
-					chromaticShader.setChrome(0.001);
+				if(ClientPrefs.mechanics && curMECH == 'run'){
+					if(gameATTRIBUTES['isShaderOn']){
+						glitchShader.glitchAmount.value[0] = 0.5;
+						chromaticShader.setChrome(0.005);
+					}
+					if(runTxt.roarSound.playing) runTxt.roarSound.stop();
+					if(runTxt.killSound.playing)runTxt.killSound.stop();
 				}
+	
 				openSubState(new GameOverSubstate(boyfriend.getScreenPosition().x - boyfriend.positionArray[0], boyfriend.getScreenPosition().y - boyfriend.positionArray[1], camFollowPos.x, camFollowPos.y));
 
 				// MusicBeatState.switchState(new GameOverState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
@@ -2662,7 +2689,6 @@ class PlayState extends MusicBeatState
 			});
 		}
 	}
-
 
 	public var transitioning = false;
 	public function endSong():Void
@@ -3240,13 +3266,20 @@ class PlayState extends MusicBeatState
 
 		if(ClientPrefs.mechanics && curMECH == 'run'){
 			//run mech
-			if(songMisses == 5 || songMisses == 10 || songMisses == 15) { //test, gonna make it link to accuracy
+			if(songMisses % randoNum == 0){
 				if(runTxt.strike < runTxt.runArray.length)
 					runTxt.addStrike(1);
 				if(gameATTRIBUTES['isShaderOn']){
+					if(runTxt.strike <= 2){
+						daStatic.visible = true;
+						new FlxTimer().start(0.15, function(tmr:FlxTimer){
+							daStatic.visible = false;
+						});
+					}
 					chromaticShader.setChrome(chromaticShader.chromeOFFSET += (chromaticShader.chromShaderAddVar * (runTxt.strike + 1)));
 					glitchShader.glitchAmount.value[0] += 0.25;
 				}
+				
 			}
 		}
 
@@ -3493,8 +3526,6 @@ class PlayState extends MusicBeatState
 		grpNoteSplashes.add(splash);
 	}
 
-
-
 	override function destroy() {
 		for (lua in luaArray) {
 			lua.call('onDestroy', []);
@@ -3694,7 +3725,8 @@ class PlayState extends MusicBeatState
 						}
 					}
 				}
-			}
+			}	
+
 
 			// Rating FC
 			ratingFC = "";

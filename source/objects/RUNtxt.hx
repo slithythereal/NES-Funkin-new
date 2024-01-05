@@ -5,7 +5,9 @@ import objects.GameSprite;
 import flixel.util.FlxColor;
 import objects.GameSprite.GameText;
 import flixel.group.FlxSpriteGroup;
+import flixel.FlxG;
 import flixel.group.FlxGroup;
+import flixel.system.FlxSound;
 
 class RUNtxt extends FlxGroup
 {
@@ -14,6 +16,8 @@ class RUNtxt extends FlxGroup
     public var strike:Int = 0;
     public var isRunningHealthDrain:Bool = false;
     public var healthDrainVar:Float = 0.6;
+    public var roarSound:FlxSound;
+    public var killSound:FlxSound;
 
     public function new(?x:Float = 0, ?y:Float = 0)
     {
@@ -29,9 +33,16 @@ class RUNtxt extends FlxGroup
             txt.ID = i;
             txt.updateHitbox();
             runGrp.add(txt);
-            //CommandData.watch(txt);
         }
+        roarSound = new FlxSound();
+        roarSound.loadEmbedded(Paths.sound('run/redRoar_1'));
+        FlxG.sound.list.add(roarSound);
+
+        killSound = new FlxSound();
+        killSound.loadEmbedded(Paths.sound('run/neskill'), true);
+        FlxG.sound.list.add(killSound);
     }
+
     public function addStrike(num:Int)
     {
         if(strike < runArray.length){
@@ -44,8 +55,12 @@ class RUNtxt extends FlxGroup
                     trace(runArray[txt.ID] + ' is now red!');
                 }
             });
-            if(strike == runArray.length && !isRunningHealthDrain)
+            FlxG.sound.play(Paths.sound('run/redBite'));
+            if(strike == runArray.length && !isRunningHealthDrain){
                 isRunningHealthDrain = true;
+                roarSound.play();
+                killSound.play();
+            }
         }
     }
 }
@@ -58,26 +73,3 @@ class RunLetter extends GameText
         super(X, Y, fieldWidth, text);
     }
 }
-//lua code
-/*
-local letterYValue = 500;
-local letterSpacing = 60;
-local RLetterX = 225;
-local UletterX = RLetterX + letterSpacing;
-local healthDrain = 0;
-
-function onUpdate(elapsed)
-        if getProperty('songMisses') >= 15 then
-            setProperty('NLetter.color', getColorFromHex('ff0400'))
-            healthDrain = healthDrain + 0.6;
-        end
-        if healthDrain > 0 then
-            healthDrain = healthDrain - 0.2 * elapsed;
-            setProperty('health', getProperty('health') - 1 * elapsed);
-            if healthDrain < 0 then
-                healthDrain = 0;
-            end
-        end
-    end
-end
- */

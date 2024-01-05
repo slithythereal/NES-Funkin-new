@@ -125,7 +125,7 @@ class MenuState extends MusicBeatState {
                 PlayState.isStoryMode = true;
                 CoolUtil.difficulties = CoolUtil.defaultDifficulties.copy();
                 PlayState.storyDifficulty = 1;
-                PlayState.storyPlaylist = ["Godzilla"];
+                PlayState.storyPlaylist = ["Run"];
                 var diffic = CoolUtil.getDifficultyFilePath(PlayState.storyDifficulty);
                 if(diffic == null) diffic = '';
                 PlayState.SONG = Song.loadFromJson(PlayState.storyPlaylist[0].toLowerCase() + diffic, PlayState.storyPlaylist[0].toLowerCase());

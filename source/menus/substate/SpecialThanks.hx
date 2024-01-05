@@ -5,7 +5,10 @@ import flixel.FlxG;
 import objects.GameSprite;
 import objects.GameSprite.GameText;
 import flixel.group.FlxGroup.FlxTypedGroup;
+import flixel.text.FlxText;
+import flixel.util.FlxColor;
 import objects.DescBox;
+import objects.ControlsTxt;
 
 using StringTools;
 
@@ -13,8 +16,10 @@ class SpecialThanks extends MusicBeatSubstate
 {
     var specialThanksArray:Array<Array<Dynamic>> = [
         ['Ne_Eo', 'previous coder for the mod (when it was in the first stages of development)', 'https://twitter.com/Ne_Eo_Twitch'],
+        ['Lunarcleint', 'code help (mainly with shaders)', 'https://www.twitter.com/lunarcleint'],
         ['HowToAvenge101', 'music help', 'https://twitter.com/howtoavenge101'],
-        ['Lunarcleint', 'code help (via dms lol)', 'https://www.twitter.com/lunarcleint'],
+        ['Shadow Mario', 'creator of Psych Engine', 'https://twitter.com/Shadow_Mario_'],
+        ['Funkin Crew', 'developers of FNF', 'https://funkin.me'],
         ['CosbyDaf', 'creator of NES Godzilla Creepypasta', 'https://www.deviantart.com/cosbydaf']
     ];
     var textGrp:FlxTypedGroup<GameText>;
@@ -24,13 +29,28 @@ class SpecialThanks extends MusicBeatSubstate
 
     public function new() {
         super();
+
         textGrp = new FlxTypedGroup<GameText>();
         add(textGrp);
+    
+        daSquare = new Square(500, 125);
+        add(daSquare);
 
-        /*
-            daSquare = new Square(540, 190);
-            add(daSquare);
-        */
+        for(i in 0...specialThanksArray.length){
+            var offset:Float = daSquare.squareMulti + (i * 75);
+            var funnyTxt:GameText = new GameText(daSquare.x + 45, offset);
+            funnyTxt.setFormat(Paths.font("Pixel_NES.otf"), 40, FlxColor.WHITE, CENTER);
+            funnyTxt.text = specialThanksArray[i][0];
+            funnyTxt.ID = i;
+            textGrp.add(funnyTxt);   
+            funnyTxt.updateHitbox();
+            daSquare.pushSquarePos(offset + 10);
+        }
+
+        var descInfo:FlxText = new FlxText(25, 100, 0,  'PRESS [ENTER] TO OPEN CREDIT LINK');
+        descInfo.setFormat(Paths.font("Pixel_NES.otf"), 15, FlxColor.WHITE, CENTER);
+        descInfo.alpha = 0.2;
+        add(descInfo);
 
         descBox = new DescBox(true, 'Special Thanks');
         add(descBox);
@@ -47,6 +67,12 @@ class SpecialThanks extends MusicBeatSubstate
         if(cantUnpause <= 0){
             if(controls.BACK)
                 close();
+            if(controls.UI_UP_P)
+                changeSelection(-1);
+            if(controls.UI_DOWN_P)
+                changeSelection(1);
+            if(FlxG.keys.justPressed.ENTER)
+                CoolUtil.browserLoad(specialThanksArray[curCredSelected][2]);
         }
     }
 
@@ -57,6 +83,14 @@ class SpecialThanks extends MusicBeatSubstate
         if(curCredSelected < 0)
             curCredSelected = specialThanksArray.length - 1;
 
-        descBox.changeDescText(specialThanksArray[curCredSelected][1], 270);
+        descBox.changeDescText('--${specialThanksArray[curCredSelected][0]}--\n${specialThanksArray[curCredSelected][1]}', 270);
+        daSquare.changeY(curCredSelected);
+
+        for (text in textGrp) {
+            if(text.ID == curCredSelected && text.text == 'CosbyDaf')
+                text.color = FlxColor.RED;
+            else
+                text.color = FlxColor.WHITE;
+        }
     }
 }

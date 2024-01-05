@@ -98,6 +98,7 @@ class GameOverSubstate extends MusicBeatSubstate
 			endBullshit();
 		}
 
+		/*
 		if (controls.BACK)
 		{
 			FlxG.sound.music.stop();
@@ -108,9 +109,10 @@ class GameOverSubstate extends MusicBeatSubstate
 			WeekData.loadTheFirstEnabledMod();
 			MusicBeatState.switchState(new menus.MenuState());
 
-			FlxG.sound.playMusic(Paths.music('freakyMenu'));
+			Init.playMenuMusic();
 			PlayState.instance.callOnLuas('onGameOverConfirm', [false]);
 		}
+		*/
 
 		if (boyfriend.animation.curAnim != null && boyfriend.animation.curAnim.name == 'firstDeath')
 		{
