@@ -73,7 +73,7 @@ class Init extends MusicBeatState {
 
 	public static function playMenuMusic(){
 		FlxG.sound.playMusic(Paths.music("freakyMenu"));
-		FlxG.sound.music.loopTime = 29531; //29.531 seconds * 1000 = 29531
-		FlxG.sound.music.endTime = 177323; // 2 minutes in milliseconds = 120000, then add 120000 + (57.248 * 1000)
+		FlxG.sound.music.loopTime = 59075; //29.531 seconds * 1000 = 29531
+		FlxG.sound.music.endTime = 177237; // 2 minutes in milliseconds = 120000, then add 120000 + (57.248 * 1000)
 	}
 }

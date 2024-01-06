@@ -39,7 +39,8 @@ class Title extends MusicBeatState
         add(godZillaLogo);
 
         FlxG.sound.playMusic(Paths.music("titleStart"));
-        FlxG.sound.music.loopTime = 4.132;
+        FlxG.sound.music.loopTime = 4180;
+        FlxG.sound.music.endTime = 111124;
 
         super.create();        
     }

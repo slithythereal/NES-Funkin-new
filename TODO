@@ -12,15 +12,16 @@ decorate UI a little bit - FINISHED
 redo options and credits menu - (FINISHED)
 add credits menu - (FINISHED)
 work on special thanks credits - (FINISHED)
+fix music loops - (FINISHED)
+remove unnecessary features - (FINISHED)
+remove unnecessary assets - (FINISHED) 
 
+--hopefully for the future if it ever gets picked back up--
 add shaders to UI - UNFINISHED
-fix music loops - UNFINISHED
-remove unnecessary features - UNFINISHED
-remove unnecessary assets - UNFINISHED
-
---hopefully--
+redo shader code in playstate - UNFINISHED
+add mechanic warning menus - UNFINISHED
 add hmm support (hopefully) - UNFINISHED
 remove lua - UNFINISHED
 remove mod folder - UNFINISHED
-transform StoryMenuState.hx into StoryModeData.hx - UNFINISHED
-redo end transition code for title - UNFINISHED
+transform StoryMenuState.hx into StoryModeData.hx (bc we dont need the state anymore lol) - UNFINISHED
+redo end transition code for title (its so bad 😭😭😭) - UNFINISHED

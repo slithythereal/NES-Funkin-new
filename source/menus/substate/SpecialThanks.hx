@@ -17,12 +17,14 @@ class SpecialThanks extends MusicBeatSubstate
     var specialThanksArray:Array<Array<Dynamic>> = [
         ['Ne_Eo', 'previous coder for the mod (when it was in the first stages of development)', 'https://twitter.com/Ne_Eo_Twitch'],
         ['Lunarcleint', 'code help (mainly with shaders)', 'https://www.twitter.com/lunarcleint'],
-        ['HowToAvenge101', 'music help', 'https://twitter.com/howtoavenge101'],
+        ['HowToAvenge101', 'menu music help', 'https://twitter.com/howtoavenge101'],
+        ['Nyctoniac', 'some concept art', 'https://twitter.com/nyctoniac'],
         [
-            'Shadertoy.com', 
             'shaders', 
-            'https://www.shadertoy.com'
+            'shaders credits are here\n[OPEN CREDIT LINK TO VIEW]', 
+            'https://raw.githubusercontent.com/slithythereal/NES-Funkin-new/main/ShaderCreds.txt'
         ],
+        ['Vortex2Oblivion', 'shadertoy to flixel converter script\nTHANK YOU SO MUCH IM SO GLAD I FOUND THIS SCRIPT', 'https://github.com/Vortex2Oblivion/shadertoy-to-flixel/tree/master'],
         ['Shadow Mario', 'creator of Psych Engine', 'https://twitter.com/Shadow_Mario_'],
         ['Funkin Crew', 'developers of FNF', 'https://funkin.me'],
         ['CosbyDaf', 'creator of NES Godzilla Creepypasta', 'https://www.deviantart.com/cosbydaf']
@@ -38,11 +40,11 @@ class SpecialThanks extends MusicBeatSubstate
         textGrp = new FlxTypedGroup<GameText>();
         add(textGrp);
     
-        daSquare = new Square(500, 75);
+        daSquare = new Square(500, 60);
         add(daSquare);
 
         for(i in 0...specialThanksArray.length){
-            var offset:Float = daSquare.squareMulti + (i * 75);
+            var offset:Float = daSquare.squareMulti + (i * 60);
             var funnyTxt:GameText = new GameText(daSquare.x + 45, offset);
             funnyTxt.setFormat(Paths.font("Pixel_NES.otf"), 40, FlxColor.WHITE, CENTER);
             funnyTxt.text = specialThanksArray[i][0];

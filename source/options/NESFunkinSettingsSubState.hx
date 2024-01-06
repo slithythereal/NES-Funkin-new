@@ -50,7 +50,7 @@ class NESFunkinSettingsSubState extends BaseOptionsMenu
 		addOption(option);
 
 		var option:Option = new Option('Fullscreen', 
-		'Fullscreen option bc I felt like it -slithy\nalso it might not work the first time',
+		'Fullscreen option bc I felt like it\nalso it might not work the first time',
 		'isFullscreen',
 		'bool',
 		false);

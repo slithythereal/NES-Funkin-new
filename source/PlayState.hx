@@ -340,9 +340,8 @@ class PlayState extends MusicBeatState
 
 		// For the "Just the Two of Us" achievement
 		for (i in 0...keysArray.length)
-		{
 			keysPressed.push(false);
-		}
+	
 
 		if (FlxG.sound.music != null)
 			FlxG.sound.music.stop();
@@ -516,8 +515,6 @@ class PlayState extends MusicBeatState
 					camHUDSHADERS = [new ShaderFilter(glitchShader), new ShaderFilter(chromaticShader)];
 					camOtherSHADERS = [new ShaderFilter(glitchShader), new ShaderFilter(chromaticShader)];
 
-					//FlxG.camera.setFilters(camGameSHADERS);
-					//var filterArray:Array<BitmapFilter> = [new ShaderFilter(glitchShader), new ShaderFilter(chromaticShader)];
 					camGame.setFilters(camGameSHADERS);
 					camHUD.setFilters(camHUDSHADERS);
 					camOther.setFilters(camOtherSHADERS);
@@ -579,9 +576,8 @@ class PlayState extends MusicBeatState
 			doPush = true;
 		} else {
 			luaFile = Paths.getPreloadPath(luaFile);
-			if(FileSystem.exists(luaFile)) {
+			if(FileSystem.exists(luaFile)) 
 				doPush = true;
-			}
 		}
 
 		if(doPush)
@@ -3276,19 +3272,17 @@ class PlayState extends MusicBeatState
 		if(ClientPrefs.mechanics && curMECH == 'run'){
 			//run mech
 			if(songMisses % randoNum == 0){
-				if(runTxt.strike < runTxt.runArray.length)
+				if(runTxt.strike < runTxt.runArray.length){
 					runTxt.addStrike(1);
-				if(gameATTRIBUTES['isShaderOn']){
-					if(runTxt.strike < runTxt.runArray.length){
+					if(gameATTRIBUTES['isShaderOn']) {
 						daStatic.visible = true;
 						new FlxTimer().start(0.15, function(tmr:FlxTimer){
 							daStatic.visible = false;
 						});
+						chromaticShader.setChrome(chromaticShader.chromeOFFSET += (chromaticShader.chromShaderAddVar * (runTxt.strike + 1)));
+						glitchShader.glitchAmount.value[0] += 0.25;
 					}
-					chromaticShader.setChrome(chromaticShader.chromeOFFSET += (chromaticShader.chromShaderAddVar * (runTxt.strike + 1)));
-					glitchShader.glitchAmount.value[0] += 0.25;
 				}
-				
 			}
 		}
 
