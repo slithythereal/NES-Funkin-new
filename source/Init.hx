@@ -7,14 +7,19 @@ import flixel.input.keyboard.FlxKey;
 import lime.app.Application;
 import flixel.util.FlxTimer;
 import flixel.addons.transition.FlxTransitionableState;
+import haxe.Http;
 
 #if desktop
 import Discord.DiscordClient;
 #end
+
+using StringTools;
+
 class Init extends MusicBeatState {
     public static var muteKeys:Array<FlxKey> = [FlxKey.ZERO];
 	public static var volumeDownKeys:Array<FlxKey> = [FlxKey.NUMPADMINUS, FlxKey.MINUS];
 	public static var volumeUpKeys:Array<FlxKey> = [FlxKey.NUMPADPLUS, FlxKey.PLUS];
+	public static var modVersion:String = '1.0.0';
 
     override public function create()
     {
@@ -63,6 +68,22 @@ class Init extends MusicBeatState {
 
 		FlxG.mouse.visible = false;
         new FlxTimer().start(1, function(tmr:FlxTimer){
+
+			#if UPDATE_CHECKER
+			trace("UPDATEE CHECKER EXIST YEA");
+			var http = new Http("https://raw.githubusercontent.com/slithythereal/NES-Funkin-new/main/gitVersion.txt");
+			var theData:Array<String> = [];
+			http.onData = function(data:String){
+				theData.push('${data.split('\n')[0].trim()}');
+				if(!modVersion.contains(theData[0].trim())){
+					CoolUtil.browserLoad('https://github.com/slithythereal/NES-Funkin-new/tree/main');
+				}
+			}
+			http.onError = function(error){
+				trace('error: $error');
+			}
+			#end
+
 			FlxTransitionableState.skipNextTransIn = true;
 			FlxTransitionableState.skipNextTransOut = true;
             LoadingState.loadAndSwitchState(new menus.Title());
