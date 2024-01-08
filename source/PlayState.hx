@@ -58,6 +58,7 @@ import FunkinLua;
 import Conductor.Rating;
 import objects.RUNtxt;
 import objects.filters.*;
+import data.StoryModeData;
 #if !flash 
 import flixel.addons.display.FlxRuntimeShader;
 import openfl.filters.ShaderFilter;
@@ -845,6 +846,7 @@ class PlayState extends MusicBeatState
 				add(daStatic);	
 				daStatic.visible = false;
 				daStatic.cameras = [camOther];	
+				precacheList.set('GodzillaRed/static', 'image');
 			}
 		}
 
@@ -1796,6 +1798,11 @@ class PlayState extends MusicBeatState
 	{
 		if (paused)
 		{
+			if(ClientPrefs.mechanics && curMECH == 'run'){
+				if(runTxt.roarSound.playing) runTxt.roarSound.pause();
+				if(runTxt.killSound.playing) runTxt.killSound.pause();
+			}
+
 			if (FlxG.sound.music != null)
 			{
 				FlxG.sound.music.pause();
@@ -1832,6 +1839,11 @@ class PlayState extends MusicBeatState
 	{
 		if (paused)
 		{
+			if(ClientPrefs.mechanics && curMECH == 'run'){
+				if(runTxt.roarSound.playing) runTxt.roarSound.play();
+				if(runTxt.killSound.playing)runTxt.killSound.play();
+			}
+
 			if (FlxG.sound.music != null && !startingSong)
 			{
 				resyncVocals();
@@ -2766,14 +2778,14 @@ class PlayState extends MusicBeatState
 
 					// if ()
 					if(!ClientPrefs.getGameplaySetting('practice', false) && !ClientPrefs.getGameplaySetting('botplay', false)) {
-						StoryMenuState.weekCompleted.set(WeekData.weeksList[storyWeek], true);
+						StoryModeData.weekCompleted.set(WeekData.weeksList[storyWeek], true);
 
 						if (SONG.validScore)
 						{
 							Highscore.saveWeekScore(WeekData.getWeekFileName(), campaignScore, storyDifficulty);
 						}
 
-						FlxG.save.data.weekCompleted = StoryMenuState.weekCompleted;
+						FlxG.save.data.weekCompleted = StoryModeData.weekCompleted;
 						FlxG.save.flush();
 					}
 					changedDifficulty = false;

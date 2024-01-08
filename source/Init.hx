@@ -1,5 +1,6 @@
 package;
 
+import data.StoryModeData;
 import flixel.FlxG;
 import flixel.FlxState;
 import flixel.FlxSprite;
@@ -53,7 +54,7 @@ class Init extends MusicBeatState {
 
         if (FlxG.save.data.weekCompleted != null)
         {
-            StoryMenuState.weekCompleted = FlxG.save.data.weekCompleted;
+            StoryModeData.weekCompleted = FlxG.save.data.weekCompleted;
         }
 
         #if desktop
@@ -70,7 +71,7 @@ class Init extends MusicBeatState {
         new FlxTimer().start(1, function(tmr:FlxTimer){
 
 			#if UPDATE_CHECKER
-			trace("UPDATEE CHECKER EXIST YEA");
+			trace("UPDATE CHECKER EXIST YEA");
 			var http = new Http("https://raw.githubusercontent.com/slithythereal/NES-Funkin-new/main/gitVersion.txt");
 			var theData:Array<String> = [];
 			http.onData = function(data:String){

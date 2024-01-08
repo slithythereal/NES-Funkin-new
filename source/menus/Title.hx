@@ -11,6 +11,8 @@ import objects.GameSprite.GameText;
 import flixel.tweens.FlxEase;
 import openfl.Lib;
 import data.WindowsData;
+import lime.graphics.Image;
+import openfl.Assets;
 
 class Title extends MusicBeatState
 {
@@ -107,7 +109,7 @@ class Title extends MusicBeatState
         #end
 
         Lib.application.window.title = "NES Funkin': Tainted Red";
-        //Lib.application.window.setIcon(Image.fromBitmapData(Paths.image("appicons/punmaster").bitmap));
+        Lib.application.window.setIcon(Image.fromBytes(Assets.getBytes('assets/images/GAMEICON.png')));
 
         FlxTween.tween(white, {alpha: 0}, 0.75, {ease: FlxEase.linear, onComplete: function(twn:FlxTween){
             remove(white);
