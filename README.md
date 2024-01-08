@@ -1,4 +1,5 @@
 ## NES FUNKIN: TAINTED RED
+![nesthumby](https://github.com/slithythereal/NES-Funkin-new/assets/96665813/927aa041-cacc-44cc-b358-b02b65f0edd3)
 
 
 ### BUILDING INSTRUCTIONS
